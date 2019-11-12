@@ -29,7 +29,7 @@ class EnqueteController extends AppController{
   //public $presetVars = true;
 
   public $paginate = array(
-    'maxLimit' => 1000
+    'limit' => 1000
   );
 
   public $presetVars = array(
