@@ -158,6 +158,13 @@ $config['import_course_count'] = 20;
 
 // student_img(顔写真ディレクトリ)のパス
 $config['student_img'] = WWW_ROOT.'img'.DS;
+// speech(音声ファイル)のパス
+$config['speech'] = WWW_ROOT.'speech'.DS;
+
+// OpenJTalkの設定
+$config['openjtalk_path']       = '';
+$config['openjtalk_voice']      = '';
+$config['openjtalk_dictionary'] = '';
 
 $config['true_or_false'] = array(
 	'0' => 'False',
