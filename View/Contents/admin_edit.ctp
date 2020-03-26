@@ -14,6 +14,7 @@
 
 		$("#btnUpload").click(function(){
 			var val = $('input[name="data[Content][kind]"]:checked').val();
+			console.log(val);
 
 			if(!val)
 				return false;
@@ -172,7 +173,7 @@
 					)
 				);
 
-				echo "<div class='kind kind-movie kind-url kind-file'>";
+				echo "<div class='kind kind-movie kind-url kind-file kind-slide'>";
 				echo $this->Form->input('url',		array('label' => 'URL', 'class' => 'form-control form-control-upload'));
 				echo "</div>";
 
@@ -187,7 +188,7 @@
 				echo "</div>";
 
 				// テスト
-				echo "<span class='kind kind-test'>";
+				echo "<div class='kind kind-test'>";
 				echo $this->Form->input('url',		array('label' => 'URL', 'class' => 'form-control'));
 				/*
         echo $this->Form->input('form_text_url',array(
@@ -198,6 +199,12 @@
           'multiple'
 				));
 				*/
+				echo "</div>";
+
+				// スライド
+				echo "<div class='kind kind-slide'>";
+				echo $this->Form->input('file_name', array('label' => 'ファイル名', 'class' => 'form-control-filename', 'readonly' => 'readonly'));
+				echo "</div>";
 
 				echo $this->Form->input('timelimit', array(
 					'label' => '制限時間 (1-100分)',

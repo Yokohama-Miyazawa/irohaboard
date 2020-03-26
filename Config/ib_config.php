@@ -16,9 +16,10 @@ $config['content_kind']		= array(
 	'text'		=> 'テキスト',
 	'html'		=> 'リッチテキスト',
 	'movie'		=> '動画',
-	'url'		=> 'URL',
+	'url'     => 'URL',
 	'file'		=> '配布資料',
-	'test'		=> 'テスト'
+	'test'		=> 'テスト',
+	'slide'   => 'スライド'
 );
 
 $config['content_kind_comment']		= array(
@@ -26,9 +27,10 @@ $config['content_kind_comment']		= array(
 	'text'		=> 'テキスト <span>(テキスト文章のみで学習項目を作成します。)</span>',
 	'html'		=> 'リッチテキスト <span>(HTML形式で学習項目を作成します。YouTubeなどの動画の埋め込みなどにも使用可能です。)</span>',
 	'movie'		=> '動画 <span>(動画をアップロードします。HTML5のVIDEOタグで再生できるものに限られます。)</span>',
-	'url'		=> 'URL <span>(外部のWebページを学習項目として追加します。)</span>',
+	'url'		  => 'URL <span>(外部のWebページを学習項目として追加します。)</span>',
 	'file'		=> '配布資料 <span>(配布したいファイルをアップロードします。)</span>',
-	'test'		=> 'テスト <span>(テストを作成します。問題はテスト作成後、別画面にて追加します。)'
+	'test'		=> 'テスト <span>(テストを作成します。問題はテスト作成後、別画面にて追加します。)</span>',
+	'slide'   => 'スライド <span>(読み上げ機能付きのスライドに使用します)</span>'
 );
 
 $config['content_category']	= array(
@@ -79,10 +81,15 @@ $config['upload_movie_extensions'] = array(
 	'.asx',
 );
 
+$config['upload_slide_extensions'] = array(
+	'.zip',
+);
+
 // アップロードサイズの上限（別途 php.ini で upload_max_filesize を設定する必要があります）
 $config['upload_maxsize']		= 1024 * 1024 * 10;
 $config['upload_image_maxsize'] = 1024 * 1024 *  2;
 $config['upload_movie_maxsize'] = 1024 * 1024 * 10;
+$config['upload_slide_maxsize']	= 1024 * 1024 * 10;
 
 // select2 項目選択時の自動クローズの設定 (true ; 自動的にメニューを閉じる, false : 閉じない)
 $config['close_on_select'] = true;
@@ -160,6 +167,11 @@ $config['import_course_count'] = 20;
 $config['student_img'] = WWW_ROOT.'img'.DS;
 // speech(音声ファイル)のパス
 $config['speech'] = WWW_ROOT.'speech'.DS;
+// slide(スライド画像とシナリオ)のパス
+//$config['slide'] = WWW_ROOT.'slide'.DS;
+$config['slide'] = 'slide'.DS;
+
+$config['unzip_path'] = '/usr/bin/unzip';
 
 // OpenJTalkの設定
 $config['openjtalk_path']       = '';

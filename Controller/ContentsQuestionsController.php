@@ -57,6 +57,13 @@ class ContentsQuestionsController extends AppController
     $this->set('text_url',$url);
     //$this->log($url);
 
+		if($content['Content']['kind'] == 'slide'){
+			$slide_url = $this->webroot.'contents_questions/presen/'.$content_id;
+			$this->set('slide_url', $slide_url);
+			$slide_name = $this->Content->findFileName($content_id);
+			$this->set('slide_name', $slide_name);
+		}
+
     //------------------------------//
 		//	権限チェック				//
 		//------------------------------//
@@ -469,6 +476,18 @@ class ContentsQuestionsController extends AppController
 		$this->response->type($mime_type);
 		$this->response->file($file_path);
 		echo $this->response;
+	}
+
+	public function presen($content_id){
+		$this->loadModel('Content');
+		$slide_name = $this->Content->findFileName($content_id);
+		$this->log($slide_name);
+		//レイアウトを適用しない（ビューは使用する。）
+		$this->layout = '';
+
+		$slide_path = Configure::read('slide');
+		$this->set('slide_path', $slide_path);
+		$this->set('slide_name', $slide_name);
 	}
 
 }
