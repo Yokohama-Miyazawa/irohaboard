@@ -41,7 +41,7 @@
 					if (textData[count - 1] == undefined) { count = 1 }
 					$('button#next')[0].innerText = '...'
 					stopped = false
-					$('img#presen')[0].src = SRC + ('000' + count).slice(-3) + '.png'
+					$('img#presen')[0].src = SRC + ('000' + count).slice(-3) + '.jpeg'
           voice.src = '<?php echo $this->webroot ?>' + '/contents_questions/play_sound/' + textData[count - 1]
 					voice.load(); voice.play()
 					$('span#text')[0].innerText = ''

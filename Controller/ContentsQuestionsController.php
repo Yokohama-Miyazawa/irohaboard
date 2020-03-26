@@ -462,6 +462,7 @@ class ContentsQuestionsController extends AppController
 	}
 
 	public function play_sound($speech="台詞がありません"){
+		setlocale(LC_ALL, 'ja_JP.UTF-8');
 		$speech = str_replace(array(" ", "　"), "", $speech);
 		$file_path = Configure::read('speech').$speech.".wav";
 		if(!file_exists($file_path)){
