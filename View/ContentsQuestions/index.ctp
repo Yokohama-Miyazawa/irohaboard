@@ -101,26 +101,32 @@
 	<?php echo $this->Html->script('contents_questions.js?20190401');?>
 	<?php if($slide_url){ ?>
 	<script type="text/javascript">
-	var count, stopped,
+	var page, sentence, stopped,
 		date, SLIDE, SRC,
 		voice,
-		textData, showText, i, wait
-	count = 1; stopped = true
+		textLines, textData, showText, i, wait
+	page = 1; sentence = 1; stopped = true
 	date = new Date()
 	SLIDE = '<?php echo $slide_name; ?>'
 	SRC = '<?php echo $this->webroot.'slide/'?>' + SLIDE + '/'
-	console.log(SRC);
 	voice = new Audio()
-	$.ajax(SRC + SLIDE + '-scenario.txt', 'post').done(function (beforeData) { textData = beforeData.split('\n') })
+	$.ajax(SRC + SLIDE + '-scenario.txt', 'post').done(function (beforeData) {
+		textLines = beforeData.split('\n')
+		textData = Array()
+		textLines.forEach(function (element) {
+			textData.push(element.split(/(?<=。|．|\.|？|\?)/).filter(function(e){return e !== "";}).map(function(e){return e.replace('?', '？')}))
+		});
+	})
 	showText = function () {
+		console.log(textData[page - 1][sentence - 1])
 		wait = 150
-		if ('，．, .'.indexOf(textData[count - 1][i]) != -1) {
+		if ('，．, .'.indexOf(textData[page - 1][sentence - 1][i]) != -1) {
 			wait = 600
 		}
-		$('span#text')[0].innerText += textData[count - 1][i]; i++
-		if (i >= textData[count - 1].length) {
+		$('span#text')[0].innerText += textData[page - 1][sentence - 1][i]; i++
+		if (i >= textData[page - 1][sentence - 1].length) {
 			$('button#next')[0].innerText = '次へ'
-			stopped = true; count++
+			stopped = true; sentence++
 		} else {
 			setTimeout(showText, wait)
 		}
@@ -128,11 +134,12 @@
 	window.onload = function () {
 		$('button#next')[0].onclick = function () {
 			if (!stopped) { console.log('No!') } else {
-				if (textData[count - 1] == undefined) { count = 1 }
+				if (textData[page - 1][sentence - 1] == undefined) { page++; sentence = 1 }
+				if (textData[page - 1] == undefined || textData[page - 1].length == 0) { page = 1; sentence = 1 }
 				$('button#next')[0].innerText = '...'
 				stopped = false
-				$('img#presen')[0].src = SRC + ('000' + count).slice(-3) + '.jpeg'
-				voice.src = '<?php echo $this->webroot ?>' + '/contents_questions/play_sound/' + textData[count - 1]
+				if(sentence == 1){ $('img#presen')[0].src = SRC + ('000' + page).slice(-3) + '.jpeg'; }
+				voice.src = '<?php echo $this->webroot ?>' + '/contents_questions/play_sound/' + textData[page - 1][sentence - 1]
 				voice.load(); voice.play()
 				$('span#text')[0].innerText = ''
 				i = 0
