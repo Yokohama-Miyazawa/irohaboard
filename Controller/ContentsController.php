@@ -414,7 +414,7 @@ class ContentsController extends AppController
 			if($result)																				//	結果によってメッセージを設定
 			{
 				if($file_type == 'slide'){
-					$cmd = Configure::read('unzip_path').' '.$file_name.' -d '.WWW_ROOT."slide".DS;
+					$cmd = Configure::read('unzip_path').' -o '.$file_name.' -d '.WWW_ROOT."slide".DS;
 					$this->log(shell_exec($cmd));
 				}
 				$this->Flash->success('ファイルのアップロードが完了しました');
