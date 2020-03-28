@@ -27,7 +27,14 @@
 		ファイルのアップロード
 	</div>
 	<div class="panel-body">
-		<div class="alert alert-warning">アップロードするファイルを指定して、アップロードボタンをクリックしてください。<br>ファイルが複数ある場合には、ZIP形式で圧縮してアップロードを行ってください。</div>
+		<div class="alert alert-info">
+			アップロードするファイルを指定して、アップロードボタンをクリックしてください。<br>
+			ファイルが複数ある場合には、ZIP形式で圧縮してアップロードを行ってください。
+		</div>
+		<div class="alert alert-warning">
+			Google DriveからダウンロードしたZIPファイルは、アップロードの際に文字化けすることがあります。<br>
+			その場合は、一度展開してから圧縮し直したものをアップロードしてください。
+		</div>
 		<div class="form-group">
 			<h4>アップロード可能拡張子</h4>
 			<?php echo $upload_extensions;?>
