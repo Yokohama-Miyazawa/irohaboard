@@ -110,7 +110,7 @@ class UsersCoursesController extends AppController
                 $course_id = $admin_course["Course"]["id"];
 
                 $admin_user_course = $this->UsersCourse->find("first", [
-                    "fields" => ["started", "ended",],
+                    "fields" => ["started", "ended", "id"],
                     "conditions" => [
                         "user_id" => $user_id,
                         "course_id" => $course_id,
@@ -118,8 +118,8 @@ class UsersCoursesController extends AppController
                     "recursive" => -1,
                 ]);
 
-                $started = ($admin_user_course["UsersCourse"]["started"] == null) ? null : $admin_user_course["UsersCourse"]["started"];
-                $ended = ($admin_user_course["UsersCourse"]["ended"] == null) ? null : $admin_user_course["UsersCourse"]["ended"];
+                $started = (empty($admin_user_course) || $admin_user_course["UsersCourse"]["started"] == null) ? null : $admin_user_course["UsersCourse"]["started"];
+                $ended = (empty($admin_user_course) || $admin_user_course["UsersCourse"]["ended"] == null) ? null : $admin_user_course["UsersCourse"]["ended"];
 
                 $sum_content_cnt = $this->Content->find("count", [
                     "conditions" => [
@@ -141,8 +141,8 @@ class UsersCoursesController extends AppController
                     "title" => $admin_course["Course"]["title"],
                     "introduction" => $admin_course["Course"]["introduction"],
                     "before_course" => $admin_course["Course"]["before_course"],
-                    "started" => $started,
-                    "ended" => $ended,
+                    "first_date" => $started,
+                    "last_date" => $ended,
                     "sum_cnt" => $sum_content_cnt,
                     "did_cnt" => $did_content_cnt,
                 ];
@@ -188,8 +188,8 @@ class UsersCoursesController extends AppController
                     "title" => $users_course["Course"]["title"],
                     "introduction" => $users_course["Course"]["introduction"],
                     "before_course" => $users_course["Course"]["before_course"],
-                    "started" => $users_course["UsersCourse"]["started"],
-                    "ended" => $users_course["UsersCourse"]["ended"],
+                    "first_date" => $users_course["UsersCourse"]["started"],
+                    "last_date" => $users_course["UsersCourse"]["ended"],
                     "sum_cnt" => $sum_content_cnt,
                     "did_cnt" => $did_content_cnt,
                 ];
@@ -246,11 +246,11 @@ class UsersCoursesController extends AppController
         */
 
         $no_record = "";
-
+        /*
         if (count($courses) == 0) {
             $no_record = __("受講可能なコースはありません");
         }
-
+        */
         $this->set(compact("no_record", "info", "infos", "no_info"));
         //$this->set(compact("courses", "no_record", "info", "infos", "no_info"));
 
