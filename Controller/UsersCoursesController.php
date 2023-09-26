@@ -34,6 +34,7 @@ class UsersCoursesController extends AppController
         $this->loadModel("Course");
         $this->loadModel("Content");
         $this->loadModel("Record");
+        $this->loadModel("UsersCourse");
 
         $user_id = $this->Auth->user("id");
 
@@ -71,44 +72,54 @@ class UsersCoursesController extends AppController
 
         // 受講コース情報の取得
         //$courses = $this->UsersCourse->getCourseRecord($user_id);
-        // $all_courses = $this->UsersCourse->getCourseRecord($user_id);
-        $all_courses = [];
+        //$all_courses = $this->UsersCourse->getCourseRecord($user_id);
+        //$all_courses = [];
 
-        $in_category_courses_list = $this->Category->find("all", [
+        $category_data = $this->Category->find("all", [
             "order" => "Category.sort_no asc",
+            "recursive" => -1,
+        ]);
+        $categories = [];
+        foreach ($category_data as $category_datum) {
+            array_push($categories, [
+                "id" => $category_datum["Category"]["id"],
+                "title" => $category_datum["Category"]["title"],
+            ]);
+        }
+        $others_category_id = 0;
+        array_push($categories, [
+            "id" => $others_category_id,
+            "title" => "未分類",
         ]);
 
-        $out_category_courses = $this->Course->find("all", [
-            "conditions" => [
-                "Course.category_id" => null,
-            ],
-            "order" => ["Course.sort_no" => "asc"],
-        ]);
+        $categories_and_courses = [];
+        foreach ($categories as $category) {
+            $categories_and_courses[$category["id"]] = [];
+        }
 
-        foreach ($in_category_courses_list as $category_info) {
-            $tmp_arr = [];
-            $tmp_arr["Category"] = $category_info["Category"];
-            $tmp_arr["Course"] = $category_info["Course"];
-            foreach ($tmp_arr["Course"] as &$course) {
-                $course_id = $course["id"];
-                // 学習開始日
-                $first_date = $this->Record->find("first", [
+        if ($role === "admin") {
+            $all_courses = $this->Course->find("all", [
+                "fields" => [
+                    "Course.category_id", "Course.id", "Course.title", "Course.introduction", "Course.before_course",
+                ],
+                "recursive" => -1,
+            ]);
+
+            foreach ($all_courses as $admin_course) {
+                $category_id = $admin_course["Course"]["category_id"];
+                $course_id = $admin_course["Course"]["id"];
+
+                $admin_user_course = $this->UsersCourse->find("first", [
+                    "fields" => ["started", "ended",],
                     "conditions" => [
-                        "Record.course_id" => $course_id,
-                        "Record.user_id" => $user_id,
+                        "user_id" => $user_id,
+                        "course_id" => $course_id,
                     ],
-                    "order" => ["Record.created asc"],
                     "recursive" => -1,
-                ])["Record"]["created"];
-                // 学習最終日
-                $latest_date = $this->Record->find("first", [
-                    "conditions" => [
-                        "Record.course_id" => $course_id,
-                        "Record.user_id" => $user_id,
-                    ],
-                    "order" => ["Record.created desc"],
-                    "recursive" => -1,
-                ])["Record"]["created"];
+                ]);
+
+                $started = ($admin_user_course["UsersCourse"]["started"] == null) ? null : $admin_user_course["UsersCourse"]["started"];
+                $ended = ($admin_user_course["UsersCourse"]["ended"] == null) ? null : $admin_user_course["UsersCourse"]["ended"];
 
                 $sum_content_cnt = $this->Content->find("count", [
                     "conditions" => [
@@ -124,67 +135,74 @@ class UsersCoursesController extends AppController
                     "fields" => "DISTINCT Record.content_id",
                     "recursive" => -1,
                 ]);
-                $course["add_info"] = [
+
+                $course = [
+                    "id" => $course_id,
+                    "title" => $admin_course["Course"]["title"],
+                    "introduction" => $admin_course["Course"]["introduction"],
+                    "before_course" => $admin_course["Course"]["before_course"],
+                    "started" => $started,
+                    "ended" => $ended,
                     "sum_cnt" => $sum_content_cnt,
                     "did_cnt" => $did_content_cnt,
-                    "first_date" => $first_date,
-                    "last_date" => $latest_date,
                 ];
+                if ($category_id == NULL) {
+                    array_push($categories_and_courses[$others_category_id], $course);
+                } else {
+                    array_push($categories_and_courses[$category_id], $course);
+                }
             }
-            array_push($all_courses, $tmp_arr);
-        }
-
-        $other_course = [];
-        $other_course["Category"] = [
-            "id" => 0,
-            "title" => "未分類",
-        ];
-
-        $other_course["Course"] = [];
-        foreach ($out_category_courses as $category_info) {
-            $tmp_arr = $category_info["Course"];
-            $course_id = $tmp_arr["id"];
-            // 学習開始日
-            $first_date = $this->Record->find("first", [
-                "conditions" => [
-                    "Record.course_id" => $course_id,
-                    "Record.user_id" => $user_id,
+        } else {
+            $users_courses = $this->UsersCourse->find("all", [
+                "fields" => [
+                    "Course.category_id", "Course.id", "Course.title", "Course.introduction", "Course.before_course",
+                    "UsersCourse.started", "UsersCourse.ended",
                 ],
-                "order" => ["Record.created asc"],
-                "recursive" => -1,
-            ])["Record"]["created"];
-            // 学習最終日
-            $latest_date = $this->Record->find("first", [
                 "conditions" => [
-                    "Record.course_id" => $course_id,
-                    "Record.user_id" => $user_id,
+                    "UsersCourse.user_id" => $user_id,
+                    "Course.status" => 1,
                 ],
-                "order" => ["Record.created desc"],
-                "recursive" => -1,
-            ])["Record"]["created"];
-            $sum_content_cnt = $this->Content->find("count", [
-                "conditions" => [
-                    "Content.course_id" => $course_id,
-                ],
-                "recursive" => -1,
             ]);
-            $did_content_cnt = $this->Record->find("count", [
-                "conditions" => [
-                    "Record.course_id" => $course_id,
-                    "Record.user_id" => $user_id,
-                ],
-                "fileds" => "DISTINCT Record.content_id",
-                "recursive" => -1,
-            ]);
-            $tmp_arr["add_info"] = [
-                "sum_cnt" => $sum_content_cnt,
-                "did_cnt" => $did_content_cnt,
-            ];
-            array_push($other_course["Course"], $tmp_arr);
+
+            foreach ($users_courses as $users_course) {
+                $category_id = $users_course["Course"]["category_id"];
+                $course_id = $users_course["Course"]["id"];
+
+                $sum_content_cnt = $this->Content->find("count", [
+                    "conditions" => [
+                        "Content.course_id" => $course_id,
+                    ],
+                    "recursive" => -1,
+                ]);
+                $did_content_cnt = $this->Record->find("count", [
+                    "conditions" => [
+                        "Record.course_id" => $course_id,
+                        "Record.user_id" => $user_id,
+                    ],
+                    "fields" => "DISTINCT Record.content_id",
+                    "recursive" => -1,
+                ]);
+
+                $course = [
+                    "id" => $course_id,
+                    "title" => $users_course["Course"]["title"],
+                    "introduction" => $users_course["Course"]["introduction"],
+                    "before_course" => $users_course["Course"]["before_course"],
+                    "started" => $users_course["UsersCourse"]["started"],
+                    "ended" => $users_course["UsersCourse"]["ended"],
+                    "sum_cnt" => $sum_content_cnt,
+                    "did_cnt" => $did_content_cnt,
+                ];
+                if ($category_id == NULL) {
+                    array_push($categories_and_courses[$others_category_id], $course);
+                } else {
+                    array_push($categories_and_courses[$category_id], $course);
+                }
+            }
         }
+        $this->set(compact("categories", "categories_and_courses"));
 
-        array_push($all_courses, $other_course);
-
+        /*
         $courses = [];
         // 管理者の場合，コースを全部表示
         if ($role === "admin") {
@@ -225,6 +243,7 @@ class UsersCoursesController extends AppController
             }
             $courses = $all_courses;
         }
+        */
 
         $no_record = "";
 
@@ -232,7 +251,8 @@ class UsersCoursesController extends AppController
             $no_record = __("受講可能なコースはありません");
         }
 
-        $this->set(compact("courses", "no_record", "info", "infos", "no_info"));
+        $this->set(compact("no_record", "info", "infos", "no_info"));
+        //$this->set(compact("courses", "no_record", "info", "infos", "no_info"));
 
         // role == 'user'の出席情報を取る
         if ($role === "user" && $this->Date->isClassDate()) {
