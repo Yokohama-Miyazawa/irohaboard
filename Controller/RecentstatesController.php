@@ -138,6 +138,7 @@ class RecentStatesController extends AppController
 
         $this->Paginator->settings["limit"] = 20;
         $this->Paginator->settings["maxLimit"] = 20;
+        $this->Paginator->settings["order"] = "User.username asc";
         $this->User->recursive = 0;
 
         try {
