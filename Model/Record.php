@@ -175,8 +175,6 @@ class Record extends AppModel
             "order" => ["created" => "desc"],
             "recursive" => -1,
         ]);
-        // その日に学習したコンテンツがなかった場合にはNULLを返す
-        if($result == NULL){ return NULL; }
         $content_id = $result["Record"]["content_id"];
         //$this->log($content_id);
         return $content_id;
