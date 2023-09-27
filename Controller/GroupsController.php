@@ -31,7 +31,7 @@ class GroupsController extends AppController
         $this->Paginator->settings = [
             "fields" => ["*", "GroupCourse.course_title"],
             "limit" => 20,
-            "order" => "created desc",
+            "order" => ["status desc", "created desc"],
             "joins" => [
                 [
                     "type" => "LEFT OUTER",

@@ -26,7 +26,7 @@ class SoapsController extends AppController
     public function admin_find_by_group()
     {
         $this->loadModel("Group");
-        $groupData = $this->Group->findGroup();
+        $groupData = $this->Group->findPublicGroup();
         $this->set("groupData", $groupData);
     }
 

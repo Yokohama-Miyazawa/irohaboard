@@ -9,7 +9,7 @@
 	<thead>
 	<tr>
 		<th><?php echo $this->Paginator->sort('title', 'グループ名'); ?></th>
-		<th nowrap class="col-course"><?php echo __('受講コース'); ?></th>
+		<th class="ib-col-center"><?php echo $this->Paginator->sort('status', '公開/非公開'); ?></th>
 		<th class="ib-col-date"><?php echo $this->Paginator->sort('created', '作成日時'); ?></th>
 		<th class="ib-col-date"><?php echo $this->Paginator->sort('modified', '更新日時'); ?></th>
 		<th class="ib-col-action"><?php echo __('Actions'); ?></th>
@@ -19,7 +19,7 @@
 	<?php foreach ($groups as $group): ?>
 	<tr>
 		<td><?php echo h($group['Group']['title']); ?></td>
-		<td><div class="reader" title="<?php echo h($group['GroupCourse']['course_title']); ?>"><p><?php echo h($group['GroupCourse']['course_title']); ?>&nbsp;</p></div></td>
+		<td class="ib-col-center"><?php echo h(Configure::read('group_status.'.$group['Group']['status'])); ?>&nbsp;</td>
 		<td class="ib-col-date"><?php echo h(Utils::getYMDHN($group['Group']['created'])); ?>&nbsp;</td>
 		<td class="ib-col-date"><?php echo h(Utils::getYMDHN($group['Group']['modified'])); ?>&nbsp;</td>
 		<td class="ib-col-action">
