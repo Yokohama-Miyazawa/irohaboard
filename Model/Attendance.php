@@ -183,9 +183,9 @@ class Attendance extends AppModel
         $user_list = $this->User->find("all", [
             "conditions" => [
                 "User.role" => "user",
-                "",
             ],
             "order" => "User.id ASC",
+            "recursive" => -1,
         ]);
         $attendance_list = [];
         foreach ($user_list as $user) {
