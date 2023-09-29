@@ -388,17 +388,9 @@ class AttendancesController extends AppController
             strtotime(" next saturday ", strtotime($today))
         );
 
-        //1限の受講生リスト
-        $period1_user_list = $this->User->find("all", [
-            "conditions" => [
-                "User.role" => "user",
-                "User.period" => 0,
-            ],
-            "order" => "User.id ASC",
-        ]);
-
         //１限に出席した人のリスト
         $period_1_attendance_user_list = $this->Attendance->find("all", [
+            "fields" => ["User.id", "User.name"],
             "conditions" => [
                 "Attendance.date_id" => $last_class_date_id,
                 "Attendance.period" => 0,
@@ -407,60 +399,38 @@ class AttendancesController extends AppController
             "order" => "Attendance.user_id ASC",
         ]);
 
-        /**
-         * period_1_submitted = array(
-         *   [Member] => array(
-         *      string
-         *   ),
-         *   [cnt] => number
-         * )
-         */
-        $period_1_submitted = [];
-        $period_1_submitted["Member"] = "";
-        $period_1_submitted["Count"] = 0;
-
-        $period_1_unsubmitted = [];
-        $period_1_unsubmitted["Member"] = "";
-        $period_1_unsubmitted["Count"] = 0;
-
-        foreach ($period1_user_list as $user) {
-            $user_id = $user["User"]["id"];
-            $attendance_info = $this->Attendance->find("all", [
-                "conditions" => [
-                    "User.id" => $user_id,
-                    "Attendance.date_id" => $last_class_date_id,
-                    "Attendance.status" => 1,
-                ],
-            ]);
-            if (isset($attendance_info[0])) {
-                $period_1_submitted["Member"] =
-                    $period_1_submitted["Member"] .
-                    $user["User"]["name"] .
-                    "<br>";
-                $period_1_submitted["Count"] += 1;
-            } else {
-                $period_1_unsubmitted["Member"] =
-                    $period_1_unsubmitted["Member"] .
-                    $user["User"]["name"] .
-                    "<br>";
-                $period_1_unsubmitted["Count"] += 1;
-            }
-        }
-
-        $this->set(compact("period_1_submitted", "period_1_unsubmitted"));
-
-        //2限の受講生リスト
-        $period2_user_list = $this->User->find("all", [
+        //1限を欠席した人のリスト
+        $period_1_absence_user_list = $this->Attendance->find("all", [
+            "fields" => ["User.id", "User.name"],
             "conditions" => [
-                "User.role" => "user",
-                "User.period" => 1,
+                "Attendance.date_id" => $last_class_date_id,
+                "Attendance.period" => 0,
+                "NOT" => ["Attendance.status" => 1],
             ],
-            "order" => "User.id ASC",
+            "order" => "Attendance.user_id ASC",
         ]);
-        //$this->log($period2_user_list);
+
+        $period_1_attended = [
+            "Member" => implode(array_map(function ($attended) {
+                return $attended["User"]["name"] . "<br>";
+            }, $period_1_attendance_user_list)),
+            "Count" => count($period_1_attendance_user_list),
+        ];
+
+        $period_1_absent = [
+            "Member" => implode(array_map(function ($absent) {
+                return $absent["User"]["name"] . "<br>";
+            }, $period_1_absence_user_list)),
+            "Count" => count($period_1_absence_user_list),
+        ];
+
+        $this->set("period_1_submitted", $period_1_attended);
+        $this->set("period_1_unsubmitted", $period_1_absent);
+
 
         //２限に出席した人のリスト
         $period_2_attendance_user_list = $this->Attendance->find("all", [
+            "fields" => ["User.id", "User.name"],
             "conditions" => [
                 "Attendance.date_id" => $last_class_date_id,
                 "Attendance.period" => 1,
@@ -469,46 +439,33 @@ class AttendancesController extends AppController
             "order" => "Attendance.user_id ASC",
         ]);
 
-        /**
-         * period_2_submitted = array(
-         *   [Member] => array(
-         *      string
-         *   ),
-         *   [cnt] => number
-         * )
-         */
-        $period_2_submitted = [];
-        $period_2_submitted["Member"] = "";
-        $period_2_submitted["Count"] = 0;
+        //2限を欠席した人のリスト
+        $period_2_absence_user_list = $this->Attendance->find("all", [
+            "fields" => ["User.id", "User.name"],
+            "conditions" => [
+                "Attendance.date_id" => $last_class_date_id,
+                "Attendance.period" => 1,
+                "NOT" => ["Attendance.status" => 1],
+            ],
+            "order" => "Attendance.user_id ASC",
+        ]);
 
-        $period_2_unsubmitted = [];
-        $period_2_unsubmitted["Member"] = "";
-        $period_2_unsubmitted["Count"] = 0;
-        foreach ($period2_user_list as $user) {
-            $user_id = $user["User"]["id"];
-            $attendance_info = $this->Attendance->find("all", [
-                "conditions" => [
-                    "User.id" => $user_id,
-                    "Attendance.date_id" => $last_class_date_id,
-                    "Attendance.status" => 1,
-                ],
-            ]);
-            if (isset($attendance_info[0])) {
-                $period_2_submitted["Member"] =
-                    $period_2_submitted["Member"] .
-                    $user["User"]["name"] .
-                    "<br>";
-                $period_2_submitted["Count"] += 1;
-            } else {
-                $period_2_unsubmitted["Member"] =
-                    $period_2_unsubmitted["Member"] .
-                    $user["User"]["name"] .
-                    "<br>";
-                $period_2_unsubmitted["Count"] += 1;
-            }
-        }
+        $period_2_attended = [
+            "Member" => implode(array_map(function ($attended) {
+                return $attended["User"]["name"] . "<br>";
+            }, $period_2_attendance_user_list)),
+            "Count" => count($period_2_attendance_user_list),
+        ];
 
-        $this->set(compact("period_2_submitted", "period_2_unsubmitted"));
+        $period_2_absent = [
+            "Member" => implode(array_map(function ($absent) {
+                return $absent["User"]["name"] . "<br>";
+            }, $period_2_absence_user_list)),
+            "Count" => count($period_2_absence_user_list),
+        ];
+
+        $this->set("period_2_submitted", $period_2_attended);
+        $this->set("period_2_unsubmitted", $period_2_absent);
 
         $this->set(compact("last_day", "last_class_date_id"));
     }
