@@ -42,7 +42,7 @@
 						'class' => 'soap_teacher',
 						'options' => $group_list,
 						'empty' => '',
-            'value' => $member['User']['last_group'],
+            'value' => $member['User']['group_id'],
 						'style' => ''
 					 ));
       ?>

@@ -107,10 +107,7 @@ class Group extends AppModel
         $data = $this->User->find("all", [
             "fields" => ["id"],
             "conditions" => [
-                "OR" => [
-                    "group_id" => $group_id,
-                    "last_group" => $group_id,
-                ],
+                "group_id" => $group_id,
             ],
             "recursive" => -1,
         ]);
