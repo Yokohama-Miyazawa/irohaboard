@@ -279,10 +279,7 @@ class User extends AppModel
         $data = $this->find("all", [
             "fields" => ["id", "group_id"],
             "conditions" => [
-                "OR" => [
-                    "group_id" => $group_id,
-                    "last_group" => $group_id,
-                ],
+                "group_id" => $group_id,
             ],
             "order" => ["username" => "ASC"],
             "recursive" => -1,
@@ -294,12 +291,9 @@ class User extends AppModel
     public function findAllStudentInGroup($group_id)
     {
         $data = $this->find("all", [
-            "fields" => ["id", "group_id", "last_group"],
+            "fields" => ["id", "group_id"],
             "conditions" => [
-                "OR" => [
-                    "group_id" => $group_id,
-                    "last_group" => $group_id,
-                ],
+                "group_id" => $group_id,
                 "role" => "user",
             ],
             "order" => ["username" => "ASC"],
@@ -502,10 +496,7 @@ class User extends AppModel
             "fields" => ["id", "group_id", "username", "name", "birthyear", "pic_path"],
             "conditions" => [
                 "role" => "user",
-                "OR" => [
-                    "group_id" => $group_id,
-                    "last_group" => $group_id,
-                ],
+                "group_id" => $group_id,
             ],
             "recursive" => -1,
         ]);

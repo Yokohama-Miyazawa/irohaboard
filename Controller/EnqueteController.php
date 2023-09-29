@@ -113,8 +113,6 @@ class EnqueteController extends AppController
                 $save_data = $request_data;
 
                 $this->User->id = $user_id;
-                //最後に所属したグループを更新
-                $this->User->saveField("last_group", $request_data["group_id"]);
 
                 if ($this->Enquete->save($save_data)) {
                     $this->Flash->success(
