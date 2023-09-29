@@ -254,6 +254,10 @@ class SoapRecordsController extends AppController
             "order" => "Attendance.user_id ASC",
         ]);
 
+        $period_1_attendance_ids = array_map(function($attended){
+            return $attended["User"]["id"];
+        }, $period_1_attendance_user_list);
+
         $today = date("Y-m-d");
         $from_date =
             date("w") == 0
@@ -279,27 +283,29 @@ class SoapRecordsController extends AppController
         $period_1_unsubmitted = [];
         $period_1_unsubmitted["Member"] = "";
         $period_1_unsubmitted["Count"] = 0;
-        foreach ($period_1_attendance_user_list as $user) {
-            $user_id = $user["User"]["id"];
-            $enquete_info = $this->Soap->find("all", [
-                "conditions" => [
-                    "User.id" => $user_id,
-                    "Soap.created BETWEEN ? AND ?" => [
-                        $from_date,
-                        $to_date . " 23:59:59",
-                    ],
+
+        $soap_data_1 = $this->Soap->find("all", [
+            "fields" => ["DISTINCT User.id", "User.name", "Soap.id"],
+            "conditions" => [
+                "User.id" => $period_1_attendance_ids,
+                "Soap.created BETWEEN ? AND ?" => [
+                    $from_date,
+                    $to_date . " 23:59:59",
                 ],
-            ]);
-            if (isset($enquete_info[0])) {
+            ],
+        ]);
+
+        foreach ($soap_data_1 as $soap_datum) {
+            if (isset($soap_datum["Soap"])) {
                 $period_1_submitted["Member"] =
                     $period_1_submitted["Member"] .
-                    $user["User"]["name"] .
+                    $soap_datum["User"]["name"] .
                     "<br>";
                 $period_1_submitted["Count"] += 1;
             } else {
                 $period_1_unsubmitted["Member"] =
                     $period_1_unsubmitted["Member"] .
-                    $user["User"]["name"] .
+                    $soap_datum["User"]["name"] .
                     "<br>";
                 $period_1_unsubmitted["Count"] += 1;
             }
@@ -317,6 +323,10 @@ class SoapRecordsController extends AppController
             "order" => "Attendance.user_id ASC",
         ]);
 
+        $period_2_attendance_ids = array_map(function($attended){
+            return $attended["User"]["id"];
+        }, $period_2_attendance_user_list);
+
         /**
          * period_2_submitted = array(
          *   [Member] => array(
@@ -332,27 +342,29 @@ class SoapRecordsController extends AppController
         $period_2_unsubmitted = [];
         $period_2_unsubmitted["Member"] = "";
         $period_2_unsubmitted["Count"] = 0;
-        foreach ($period_2_attendance_user_list as $user) {
-            $user_id = $user["User"]["id"];
-            $enquete_info = $this->Soap->find("all", [
-                "conditions" => [
-                    "User.id" => $user_id,
-                    "Soap.created BETWEEN ? AND ?" => [
-                        $from_date,
-                        $to_date . " 23:59:59",
-                    ],
+
+        $soap_data_2 = $this->Soap->find("all", [
+            "fields" => ["DISTINCT User.id", "User.name", "Soap.id"],
+            "conditions" => [
+                "User.id" => $period_2_attendance_ids,
+                "Soap.created BETWEEN ? AND ?" => [
+                    $from_date,
+                    $to_date . " 23:59:59",
                 ],
-            ]);
-            if (isset($enquete_info[0])) {
+            ],
+        ]);
+
+        foreach ($soap_data_2 as $soap_datum) {
+            if (isset($soap_datum["Soap"])) {
                 $period_2_submitted["Member"] =
                     $period_2_submitted["Member"] .
-                    $user["User"]["name"] .
+                    $soap_datum["User"]["name"] .
                     "<br>";
                 $period_2_submitted["Count"] += 1;
             } else {
                 $period_2_unsubmitted["Member"] =
                     $period_2_unsubmitted["Member"] .
-                    $user["User"]["name"] .
+                    $soap_datum["User"]["name"] .
                     "<br>";
                 $period_2_unsubmitted["Count"] += 1;
             }
