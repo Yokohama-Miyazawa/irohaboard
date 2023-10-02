@@ -1,5 +1,15 @@
 <?php echo $this->element('admin_menu');?>
 <?php echo $this->Html->css('soap');?>
+<?php echo $this->Html->script('custom.js');?>
+<script>
+$(function(){
+  setInputLengthChecker("<?php echo "#".$user_id."S"; ?>", <?php echo h($input_max_length); ?>);
+  setInputLengthChecker("<?php echo "#".$user_id."O"; ?>", <?php echo h($input_max_length); ?>);
+  setInputLengthChecker("<?php echo "#".$user_id."A"; ?>", <?php echo h($input_max_length); ?>);
+  setInputLengthChecker("<?php echo "#".$user_id."P"; ?>", <?php echo h($input_max_length); ?>);
+  setInputLengthChecker("<?php echo "#".$user_id."Comment"; ?>", <?php echo h($input_max_length); ?>);
+});
+</script>
 <div class = "admin-student_edit-index">
   <div class = "ib-page-title"><?php echo __('個別記入')?></div>
   <br><br>
@@ -72,7 +82,8 @@
 				'label' => __('S:'),
 				'value' => $soap_inputted[$user_id]['S'],
   			'div' => false,
-  			'class' => ''
+  			'class' => 'subject',
+			'style' => '',
   		));
       echo "</div>";
 
@@ -81,8 +92,8 @@
 				'label' => __('O:'),
 				'value' => $soap_inputted[$user_id]['O'],
   			'div' => false,
-  			'class' => '',
-  			'style' => ''
+  			'class' => 'object',
+  			'style' => '',
   		));
       echo "</div>";
 
@@ -91,8 +102,8 @@
 				'label' => __('A:'),
 				'value' => $soap_inputted[$user_id]['A'],
   			'div' => false,
-  			'class' => '',
-  			'style' => ''
+  			'class' => 'assessment',
+  			'style' => '',
   		));
       echo "</div>";
 
@@ -101,8 +112,8 @@
 				'label' => __('P:'),
 				'value' => $soap_inputted[$user_id]['P'],
   			'div' => false,
-  			'class' => '',
-  			'style' => ''
+  			'class' => 'plan',
+  			'style' => '',
   		));
       echo "</div>";
 
@@ -111,8 +122,8 @@
 				'label' => __('自由記述:'),
 				'value' => $soap_inputted[$user_id]['comment'],
   			'div' => false,
-  			'class' => 'soap',
-  			'style' => ''
+  			'class' => 'comment',
+  			'style' => '',
   		));
       echo "</div>";
   	?>
