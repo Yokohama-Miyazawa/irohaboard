@@ -5,58 +5,46 @@
 
 <script type="text/javascript">
   google.charts.load("current", {packages:["corechart"]});
-  google.charts.setOnLoadCallback(drawPeriod1Chart);
-  google.charts.setOnLoadCallback(drawPeriod2Chart);
+  google.charts.setOnLoadCallback(() => {
+    drawChart(
+      <?php echo $period_1_submitted['Count'];?>,
+      <?php echo $period_1_unsubmitted['Count'];?>,
+      "<?php echo $period_1_submitted['Member'];?>",
+      "<?php echo $period_1_unsubmitted['Member'];?>",
+      "period1Chart"
+    )
+  });
+  google.charts.setOnLoadCallback(() => {
+    drawChart(
+      <?php echo $period_2_submitted['Count'];?>,
+      <?php echo $period_2_unsubmitted['Count'];?>,
+      "<?php echo $period_2_submitted['Member'];?>",
+      "<?php echo $period_2_unsubmitted['Member'];?>",
+      "period2Chart"
+    )
+  });
 
-  function drawPeriod1Chart() {
-    var data = new google.visualization.DataTable();
+  function drawChart(submitted_count, unsubmitted_count, submitted_member, unsubmitted_member, element) {
+    let data = new google.visualization.DataTable();
     data.addColumn('string', 'Status');
     // Use custom HTML content for the domain tooltip.
     data.addColumn('number', 'Number');
     data.addColumn({'type': 'string', 'role': 'tooltip', 'p': {'html': true}});
 
-    var p1_sub_count = <?php echo $period_1_submitted['Count'];?>;
-    var p1_sub_member = p1_sub_count >= 10 ? "" : "<p style='font-size : 20px; white-space : nowrap;'>" + "<?php echo $period_1_submitted['Member'];?>" + "</p>";
-    var p1_unsub_count = <?php echo $period_1_unsubmitted['Count'];?>;
-    var p1_unsub_member = "<p style='font-size : 20px; white-space : nowrap;'>" + "<?php echo $period_1_unsubmitted['Member'];?>" + "</p>";
+    const submitted_students = submitted_count >= 10 ? "" : "<p style='font-size : 20px; white-space : nowrap;'>" + submitted_member + "</p>";
+    const unsubmitted_students = "<p style='font-size : 20px; white-space : nowrap;'>" + unsubmitted_member + "</p>";
     data.addRows([
-      ['提出数',p1_sub_count, p1_sub_member],
-      ['未提出数',p1_unsub_count, p1_unsub_member]
+      ['提出数',submitted_count, submitted_students],
+      ['未提出数',unsubmitted_count, unsubmitted_students]
     ])
-    var options = {
+    const options = {
       pieHole: 0.6,
       fontSize: 18,
       legend: { position: 'top', alignment: 'center' },
       'chartArea': {'width': '100%', 'height': '80%'},
       tooltip: { isHtml: true }
     }
-    var chart = new google.visualization.PieChart(document.getElementById('period1Chart'));
-    chart.draw(data, options);
-  }
-
-  function drawPeriod2Chart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Status');
-    // Use custom HTML content for the domain tooltip.
-    data.addColumn('number', 'Number');
-    data.addColumn({'type': 'string', 'role': 'tooltip', 'p': {'html': true}});
-
-    var p2_sub_count = <?php echo $period_2_submitted['Count'];?>;
-    var p2_sub_member = p2_sub_count >= 10 ? "" : "<p style='font-size : 20px; white-space : nowrap;'>" + "<?php echo $period_2_submitted['Member'];?>" + "</p>";
-    var p2_unsub_count = <?php echo $period_2_unsubmitted['Count'];?>;
-    var p2_unsub_member = "<p style='font-size : 20px; white-space : nowrap;'>" + "<?php echo $period_2_unsubmitted['Member'];?>" + "</p>";
-    data.addRows([
-      ['提出数',p2_sub_count, p2_sub_member],
-      ['未提出数',p2_unsub_count, p2_unsub_member]
-    ])
-    var options = {
-      pieHole: 0.6,
-      fontSize: 18,
-      legend: { position: 'top', alignment: 'center' },
-      'chartArea': {'width': '100%', 'height': '80%'},
-      tooltip: { isHtml: true }
-    }
-    var chart = new google.visualization.PieChart(document.getElementById('period2Chart'));
+    const chart = new google.visualization.PieChart(document.getElementById(element));
     chart.draw(data, options);
   }
 </script>
