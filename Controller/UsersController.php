@@ -257,18 +257,20 @@ class UsersController extends AppController
             'User.role' => $role
         ));
 
-        $user_list = $this->User->find('all',array(
+        $this->Paginator->settings = [
             'conditions' => $user_conditions,
-            'order' => 'User.username asc',
-            'recursive' => -1
-        ));
+            "limit" => 100,
+            "order" => "User.username asc",
+            "recursive" => -1,
+        ];
 
         // ユーザ一覧を取得
         try {
+           $user_list = $this->paginate(); 
         } catch (Exception $e) {
             // 指定したページが存在しなかった場合（主に検索条件変更時に発生）、1ページ目を設定
             $this->request->params["named"]["page"] = 1;
-            $user_list = $admin_list = $graduate_list = $this->paginate();
+            $user_list = $this->paginate();
         }
 
         // グループ一覧を取得

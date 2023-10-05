@@ -548,6 +548,7 @@ class User extends AppModel
                 "User.period" => $period,
             ],
             "order" => "User.username ASC",
+            "recursive" => -1,
         ]);
 
         return array_map(function($user_info){

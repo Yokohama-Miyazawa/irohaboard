@@ -393,6 +393,10 @@ class EnqueteController extends AppController
             "order" => "Attendance.user_id ASC",
         ]);
 
+        $period_1_attendance_ids = array_map(function($attended){
+            return $attended["User"]["id"];
+        }, $period_1_attendance_user_list);
+
         $today = date("Y-m-d");
         $from_date =
             date("w") == 0
@@ -418,31 +422,31 @@ class EnqueteController extends AppController
         $period_1_unsubmitted = [];
         $period_1_unsubmitted["Member"] = "";
         $period_1_unsubmitted["Count"] = 0;
-        foreach ($period_1_attendance_user_list as $user) {
-            $user_id = $user["User"]["id"];
-            $enquete_info = $this->Enquete->find("first", [
-                "conditions" => [
-                    "User.id" => $user_id,
-                    "Enquete.created BETWEEN ? AND ?" => [
-                        $from_date,
-                        $to_date . " 23:59:59",
-                    ],
+
+        $enquete_data_1 = $this->Enquete->find("all", [
+            "fields" => [
+                "DISTINCT User.id", "User.name", "Enquete.id", "Enquete.today_impressions"
+            ],
+            "conditions" => [
+                "User.id" => $period_1_attendance_ids,
+                "Enquete.created BETWEEN ? AND ?" => [
+                    $from_date,
+                    $to_date . " 23:59:59",
                 ],
-                "order" => [
-                    "Enquete.created" => "desc",
-                ],
-                "recursive" => 0,
-            ]);
-            if ($enquete_info["Enquete"]["today_impressions"] != "") {
+            ],
+        ]);
+
+        foreach ($enquete_data_1 as $enquete_datum) {
+            if ($enquete_datum["Enquete"]["today_impressions"] != "") {
                 $period_1_submitted["Member"] =
                     $period_1_submitted["Member"] .
-                    $user["User"]["name"] .
+                    $enquete_datum["User"]["name"] .
                     "<br>";
                 $period_1_submitted["Count"] += 1;
             } else {
                 $period_1_unsubmitted["Member"] =
                     $period_1_unsubmitted["Member"] .
-                    $user["User"]["name"] .
+                    $enquete_datum["User"]["name"] .
                     "<br>";
                 $period_1_unsubmitted["Count"] += 1;
             }
@@ -460,6 +464,10 @@ class EnqueteController extends AppController
             "order" => "Attendance.user_id ASC",
         ]);
 
+        $period_2_attendance_ids = array_map(function($attended){
+            return $attended["User"]["id"];
+        }, $period_2_attendance_user_list);
+
         /**
          * period_2_submitted = array(
          *   [Member] => array(
@@ -475,31 +483,31 @@ class EnqueteController extends AppController
         $period_2_unsubmitted = [];
         $period_2_unsubmitted["Member"] = "";
         $period_2_unsubmitted["Count"] = 0;
-        foreach ($period_2_attendance_user_list as $user) {
-            $user_id = $user["User"]["id"];
-            $enquete_info = $this->Enquete->find("first", [
-                "conditions" => [
-                    "User.id" => $user_id,
-                    "Enquete.created BETWEEN ? AND ?" => [
-                        $from_date,
-                        $to_date . " 23:59:59",
-                    ],
+
+        $enquete_data_2 = $this->Enquete->find("all", [
+            "fields" => [
+                "DISTINCT User.id", "User.name", "Enquete.id", "Enquete.today_impressions"
+            ],
+            "conditions" => [
+                "User.id" => $period_2_attendance_ids,
+                "Enquete.created BETWEEN ? AND ?" => [
+                    $from_date,
+                    $to_date . " 23:59:59",
                 ],
-                "order" => [
-                    "Enquete.created" => "desc",
-                ],
-                "recursive" => 0,
-            ]);
-            if ($enquete_info["Enquete"]["today_impressions"] != "") {
+            ],
+        ]);
+
+        foreach ($enquete_data_2 as $enquete_datum) {
+            if ($enquete_datum["Enquete"]["today_impressions"] != "") {
                 $period_2_submitted["Member"] =
                     $period_2_submitted["Member"] .
-                    $user["User"]["name"] .
+                    $enquete_datum["User"]["name"] .
                     "<br>";
                 $period_2_submitted["Count"] += 1;
             } else {
                 $period_2_unsubmitted["Member"] =
                     $period_2_unsubmitted["Member"] .
-                    $user["User"]["name"] .
+                    $enquete_datum["User"]["name"] .
                     "<br>";
                 $period_2_unsubmitted["Count"] += 1;
             }
