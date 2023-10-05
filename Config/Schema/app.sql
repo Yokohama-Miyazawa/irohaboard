@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS `ib_users` (
   `os_type` int(20) DEFAULT NULL,
   `group_id` int(20) DEFAULT NULL,
   `birthyear` int(20) DEFAULT NULL,
-  `last_group` int(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `login_id` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
