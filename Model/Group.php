@@ -128,7 +128,22 @@ class Group extends AppModel
     public function findGroup()
     {
         $data = $this->find("all", [
+            "fields" => ["id", "title", "status"],
+            "order" => ["status desc", "created desc"],
+            "recursive" => -1,
+        ]);
+        //$this->log($data);
+        return $data;
+    }
+
+    // 公開状態のグループのみ取得
+    public function findPublicGroup()
+    {
+        $data = $this->find("all", [
             "fields" => ["id", "title"],
+            "conditions" => [
+                "status" => 1,
+            ],
             "recursive" => -1,
         ]);
         //$this->log($data);
