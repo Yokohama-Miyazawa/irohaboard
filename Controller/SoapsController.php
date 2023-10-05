@@ -57,6 +57,10 @@ class SoapsController extends AppController
         $this->loadModel("Attendance");
         $this->loadModel("Date");
 
+        // SOAP入力欄の最大文字数
+        $input_max_length = 200;
+        $this->set("input_max_length", $input_max_length);
+
         //日付リスト
         $today_date = isset($this->request->query["today_date"])
             ? $this->request->query["today_date"]
@@ -217,6 +221,10 @@ class SoapsController extends AppController
         $this->loadModel("Enquete");
         $this->loadModel("Attendance");
         $this->loadModel("Date");
+
+        // SOAP入力欄の最大文字数
+        $input_max_length = 200;
+        $this->set("input_max_length", $input_max_length);
 
         $pic_path = $this->User->findUserPicPath($user_id);
         $this->set("pic_path", $pic_path);
