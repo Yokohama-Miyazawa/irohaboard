@@ -17,7 +17,18 @@
 			<?php
 				echo $this->Form->input('id');
 				echo $this->Form->input('title',	array('label' => __('グループ名')));
-				echo $this->Form->input('Course',	array('label' => __('受講コース'),		'size' => 20));
+				///echo $this->Form->input('Course',	array('label' => __('受講コース'),		'size' => 20));
+				echo $this->Form->input('status',	array(
+					'type' => 'radio',
+					'before' => '<label class="col col-sm-3 control-label">ステータス</label>',
+					'after' => '<span class="status-exp">　非公開と設定した場合、管理者権限でログインした場合のみ表示されます。</span>',
+					'separator' => '　',
+					'legend' => false,
+					'class' => false,
+					'default' => 1,
+					'options' => Configure::read('group_status')
+					)
+				);
 				echo $this->Form->input('comment',	array('label' => __('備考')));
 			?>
 			<div class="form-group">

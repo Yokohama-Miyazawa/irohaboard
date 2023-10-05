@@ -8,7 +8,9 @@
   <?php foreach ((array)$groupData as $row):?>
   <div class = "group-btn-block">
   <button type = "button" class="group-btn btn-outline-dark"
-    onclick = "location.href = '<?php echo Router::url(array('action' => 'group_view',$row['Group']['id']))?>'"><?php echo $row['Group']['title']?></button>
+    onclick = "location.href = '<?php echo Router::url(array('action' => 'group_view',$row['Group']['id']))?>'">
+    <?php echo $row['Group']['title']?>
+  </button>
   </div>
   <?php endforeach;?>
   </div>

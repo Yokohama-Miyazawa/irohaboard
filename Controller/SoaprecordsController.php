@@ -90,11 +90,9 @@ class SoapRecordsController extends AppController
             ];
         }
 
-        // グループが指定されている場合、指定したグループに所属するユーザの履歴を抽出
+        // グループが指定されている場合、記入当時指定したグループに所属していたユーザの履歴を抽出
         if ($group_id != "") {
-            $conditions["User.id"] = $this->Group->getUserIdByGroupID(
-                $group_id
-            );
+            $conditions["Soap.group_id"] = $group_id;
         }
 
         if ($period != "") {

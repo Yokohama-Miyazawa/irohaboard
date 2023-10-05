@@ -77,8 +77,12 @@ class EnqueteController extends AppController
 
         $this->set("enquete_inputted", $enquete_inputted);
 
-        //グループリストを生成
-        $group_list = $this->Group->find("list");
+        //グループリストを生成(公開状態のグループのみ)
+        $group_list = $this->Group->find("list", [
+            "conditions" => [
+                "status" => 1,
+            ],
+        ]);
         $this->set("group_list", $group_list);
 
         //今所属するグループのidを探す．
@@ -113,8 +117,6 @@ class EnqueteController extends AppController
                 $save_data = $request_data;
 
                 $this->User->id = $user_id;
-                //最後に所属したグループを更新
-                $this->User->saveField("last_group", $request_data["group_id"]);
 
                 if ($this->Enquete->save($save_data)) {
                     $this->Flash->success(
