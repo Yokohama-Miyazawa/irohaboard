@@ -162,44 +162,43 @@
 		<div class="card-header"><?php echo __('コース一覧'); ?></div>
 		<div class="card-body">
 			<div class="accordion">
-				<?php foreach($courses as $course):?>
+				<?php foreach($categories as $category):?>
 				<?php
-				  // コースがない時、非表示 
-					if(count($course['Course']) == 0){
+				  	// コースがない時、非表示 
+					if(count($categories_and_courses[$category["id"]]) == 0){
 						continue;
 					}
 				?>
-					<div class="card mb-3 shadow rounded-lg">
-      			<div class="card-header" id='heading-<?php echo $course['Category']['id']?>'>
+				<div class="card mb-3 shadow rounded-lg">
+      			<div class="card-header" id='heading-<?php echo $category['id']?>'>
         			<h5 class="mb-0">
-          			<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-<?php echo $course['Category']['id']?>" aria-expanded="true" aria-controls="collapse-<?php echo $course['Category']['id']?>">
-            			<?php echo $course['Category']['title']?>
+          			<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-<?php echo $category['id']?>" aria-expanded="true" aria-controls="collapse-<?php echo $category['id']?>">
+            			<?php echo $category['title']?>
           			</button>
         			</h5>
       			</div>
 
-						<div id="collapse-<?php echo $course['Category']['id']?>" class="collapse" aria-labelledby="heading-<?php echo $course['Category']['id']?>'">
-      			  <div class="card-body">
-      			    <ul class="list-group rounded">
-									<?php foreach($course['Course'] as $course_info):?>
-									<?php $left_cnt = $course_info['add_info']['sum_cnt'] - $course_info['add_info']['did_cnt'];?>
-									<?php $bar_percent = round(($course_info['add_info']['did_cnt'] / $course_info['add_info']['sum_cnt']) * 100 );?>
-										<a href="<?php echo Router::url(array('controller' => 'contents', 'action' => 'index', $course_info['id']));?>" class="list-group-item">
-											<h4 class="list-group-item-heading"><?php echo h($course_info['title']);?></h4>
-											<p class="list-group-item-text">
-												<span style="color:black"><?php echo __('学習開始日').': '.Utils::getYMD($course_info['add_info']['first_date']); ?></span>
-												<span style="color:black"><?php echo __('最終学習日').': '.Utils::getYMD($course_info['add_info']['last_date']); ?></span>
-											</p>
-											<div class="progress">
-  											<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo $bar_percent;?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $bar_percent?>%"></div>
-											</div>
-										</a>
-									<?php endforeach;?>
-
-								</ul>
-      			  </div>
+				<div id="collapse-<?php echo $category['id']?>" class="collapse" aria-labelledby="heading-<?php echo $category['id']?>'">
+      			  	<div class="card-body">
+      			    	<ul class="list-group rounded">
+							<?php foreach($categories_and_courses[$category["id"]] as $course_info):?>
+								<?php $left_cnt = $course_info['sum_cnt'] - $course_info['did_cnt'];?>
+								<?php $bar_percent = round(($course_info['did_cnt'] / $course_info['sum_cnt']) * 100 );?>
+								<a href="<?php echo Router::url(array('controller' => 'contents', 'action' => 'index', $course_info['id']));?>" class="list-group-item">
+									<h4 class="list-group-item-heading"><?php echo h($course_info['title']);?></h4>
+									<p class="list-group-item-text">
+										<span style="color:black"><?php echo __('学習開始日').': '.Utils::getYMD($course_info['first_date']); ?></span>
+										<span style="color:black"><?php echo __('最終学習日').': '.Utils::getYMD($course_info['last_date']); ?></span>
+									</p>
+									<div class="progress">
+  									<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo $bar_percent;?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $bar_percent?>%"></div>
+									</div>
+								</a>
+							<?php endforeach;?>
+						</ul>
+      				</div>
       			</div>
-					</div>
+				</div>
 				<?php endforeach;?>
 			</div>
 		</div>

@@ -14,6 +14,7 @@ App::uses("UsersGroup", "UsersGroup");
 App::uses("Course", "Course");
 App::uses("User", "User");
 App::uses("Group", "Group");
+App::uses("UsersCourse", "UsersCourse");
 
 /**
  * Records Controller
@@ -267,11 +268,14 @@ class RecordsController extends AppController
             ],
         ]);
 
+        $user_id = $this->Auth->user("id");
+        $course_id = $content["Course"]["id"];
+
         $this->Record->create();
         $data = [
             //				'group_id' => $this->Session->read('Auth.User.Group.id'),
-            "user_id" => $this->Auth->user("id"),
-            "course_id" => $content["Course"]["id"],
+            "user_id" => $user_id,
+            "course_id" => $course_id,
             "content_id" => $content_id,
             "study_sec" => $study_sec,
             "understanding" => $understanding,
@@ -280,6 +284,10 @@ class RecordsController extends AppController
         ];
 
         if ($this->Record->save($data)) {
+            // 学習開始日・最終学習日の更新
+            $this->loadModel("UsersCourse");
+            $this->UsersCourse->updateStudyDate($user_id, $course_id);
+
             $this->Flash->success(__("学習履歴を保存しました"));
             return $this->redirect([
                 "controller" => "contents",

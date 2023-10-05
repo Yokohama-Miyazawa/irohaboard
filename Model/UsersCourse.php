@@ -9,6 +9,7 @@
  */
 
 App::uses("AppModel", "Model");
+App::import("Model", "Record");
 
 /**
  * UsersCourse Model
@@ -124,5 +125,51 @@ EOF;
         $data = $this->query($sql, $params);
 
         return $data;
+    }
+
+    // 学習開始日・最終学習日のデータを更新
+    public function updateStudyDate($user_id, $course_id)
+    {
+        $data = $this->find("first", [
+            "conditions" => [
+                "user_id" => $user_id,
+                "course_id" => $course_id,
+            ],
+            "recursive" => -1,
+        ]);
+
+        // 受講コースに含まれていないなら終了
+        if (empty($data)) {
+            return;
+        }
+
+        $save_info = $data["UsersCourse"];
+
+        $started = $save_info["started"];
+
+        if ($started == null) {
+            // 学習開始日の情報がなければ取得
+            $this->Record = new Record();
+            $first_date = $this->Record->find("first", [
+                "conditions" => [
+                    "Record.course_id" => $course_id,
+                    "Record.user_id" => $user_id,
+                ],
+                "order" => ["Record.created asc"],
+                "recursive" => -1,
+            ])["Record"]["created"];
+            if ($first_date == null) {  // 学習履歴にもなければ今日の日付で設定
+                $started = date("Y-m-d");
+            } else {
+                $started = $first_date;
+            }
+            $save_info["started"] = $started;
+        }
+
+        // 最終学習日の日付を更新
+        $save_info["ended"] = date("Y-m-d");
+
+        // データベースを更新
+        $this->save($save_info);
     }
 }

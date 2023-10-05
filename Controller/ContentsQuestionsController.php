@@ -10,6 +10,7 @@
 
 App::uses("AppController", "Controller");
 App::uses("Record", "Record");
+App::uses("UsersCourse", "UsersCourse");
 
 /**
  * ContentsQuestions Controller
@@ -278,6 +279,10 @@ class ContentsQuestionsController extends AppController
                 $this->Session->delete(
                     "Iroha.RondomQuestions." . $content_id . ".id_list"
                 );
+
+                // 学習開始日・最終学習日の更新
+                $this->loadModel("UsersCourse");
+                $this->UsersCourse->updateStudyDate($user_id, $course_id);
 
                 $this->redirect([
                     "action" => "record",

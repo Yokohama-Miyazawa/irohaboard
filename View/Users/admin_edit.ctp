@@ -65,7 +65,7 @@ $(function(){
 			<?php
       echo $this->Form->input('name',	array(
       	'label' => array(
-          'text' => '氏名：',
+          'text' => '氏名',
           'class' => 'info-input-label'
         ),
         'required' => false,
@@ -75,7 +75,7 @@ $(function(){
 
 			echo $this->Form->input('name_furigana',	array(
 				'label' => array(
-					'text' => 'ふりがな：',
+					'text' => 'ふりがな',
 					'class' => 'info-input-label'
 				),
 				'required' => false,
@@ -89,7 +89,7 @@ $(function(){
 			<?php
     		echo $this->Form->input('username',	array(
         	'label' => array(
-          	'text' => '学籍番号（ログインID）：',
+          	'text' => '学籍番号（ログインID）',
           	'class' => 'info-input-label'
         	),
         	'required' => false,
@@ -103,7 +103,7 @@ $(function(){
 			<?php
     		echo $this->Form->input('birthyear',	array(
         	'label' => array(
-          	'text' => '生まれた年度：',
+          	'text' => '生まれた年度',
           	'class' => 'info-input-label'
         	),
         	'required' => false,
@@ -155,7 +155,7 @@ $(function(){
 			<?php
     		echo $this->Form->input('email',	array(
         	'label' => array(
-          	'text' => 'メールアドレス：',
+          	'text' => 'メールアドレス',
           	'class' => 'info-input-label'
         	),
         	'required' => false,
@@ -169,7 +169,7 @@ $(function(){
 			<?php
     		echo $this->Form->input('os_type',	array(
         	'label' => array(
-          	'text' => 'OS種類：',
+          	'text' => 'OS種類',
           	'class' => 'info-input-label'
         	),
         	'required' => false,
@@ -184,7 +184,7 @@ $(function(){
 			<?php
     		echo $this->Form->input('period',	array(
         	'label' => array(
-          	'text' => '受講時間帯：',
+          	'text' => '受講時間帯',
           	'class' => 'info-input-label'
         	),
         	'required' => false,
@@ -197,11 +197,23 @@ $(function(){
 			?>
     </div>
 
+	<div class = "info-input">
+			<?php
+			echo $this->Form->input('Course', array(
+				'label' => array(
+          			'text' => '受講コース',
+          			'class' => 'info-input-label'
+        		),
+				'size' => 20,
+			));
+			?>
+	</div>
+
     <div class = "info-input">
 			<?php
     		echo $this->Form->input('group_id',	array(
         	'label' => array(
-          	'text' => '所属グループ：',
+          	'text' => '所属グループ',
           	'class' => 'info-input-label'
         	),
         	'required' => false,
