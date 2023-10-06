@@ -35,8 +35,6 @@ class ProgressesDetailsController extends AppController
             "order" => "User.id asc",
         ]);
 
-        $this->log($progress_info);
-
         $progress_details = $progress_info["ProgressesDetail"];
 
         $this->set(compact("progress_info", "progress_details", "user_list"));
@@ -68,7 +66,7 @@ class ProgressesDetailsController extends AppController
             ],
             "order" => "User.id asc",
         ]);
-        $this->log($user_list);
+
         $user_name_list = $this->User->find("list", [
             "conditions" => [
                 "or" => [["User.role" => "user"], ["User.role" => "graduate"]],
@@ -76,11 +74,11 @@ class ProgressesDetailsController extends AppController
             "fields" => ["User.name"],
             "order" => "User.id asc",
         ]);
-        // $this->log($user_name_list);
+
         $tmp_data = array_values(array_unique($user_name_list));
 
         $user_name_list_json = json_encode($tmp_data);
-        // $this->log($user_name_list_json);
+
         $this->set(
             compact("user_name_list_json", "progress_id", "progress_info")
         );
@@ -203,8 +201,6 @@ class ProgressesDetailsController extends AppController
         $original_file_name = "";
 
         if ($this->request->is(["post", "put"])) {
-            $this->log($this->request->data);
-
             $fileUpload->readFile($this->request->data["Content"]["file"]); //	ファイルの読み込み
 
             $original_file_name =
@@ -277,7 +273,6 @@ class ProgressesDetailsController extends AppController
         ]);
 
         $progress_details = $progress_info["ProgressesDetail"];
-        $this->log($progress_details);
 
         $this->set(compact("progress_info", "progress_details", "user_list"));
     }

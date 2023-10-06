@@ -308,11 +308,9 @@ class UsersController extends AppController
         $this->set("pic_path", $pic_path);
 
         $group_list = $this->Group->find("list");
-        //$this->log($group_list);
         $this->set("group_list", $group_list);
 
         $rows = $this->User->getOsList();
-        //$this->log($rows);
 
         $os_list = [];
         foreach ($rows as $row) {
@@ -320,7 +318,6 @@ class UsersController extends AppController
             $os_type = $row["ib_os_types"]["type"];
             $os_list[$os_id] = $os_type;
         }
-        //$this->log($os_list);
         $this->set("os_list", $os_list);
 
         $username = "";
@@ -343,7 +340,6 @@ class UsersController extends AppController
                 )
             ) {
                 $tmp = $this->request->data;
-                //$this->log($tmp);
                 $fileName = $tmp["User"]["front_image"];
                 $path = Configure::read("student_img") . "student_img" . DS;
 
@@ -364,7 +360,7 @@ class UsersController extends AppController
                         $period
                     );
                 }
-                //$this->log($picPath);
+
                 /*
         if($this->User->updatePicPath($user_id, $picPath) !== 1){
           $this->Flash->error(__('The user could not be saved. Please, try again.'));
@@ -459,7 +455,6 @@ class UsersController extends AppController
             "recursive" => -1,
         ]);
         $email_address = $data["User"]["email"];
-        $this->log($email_address);
         $this->set("email_address", $email_address);
     }
 

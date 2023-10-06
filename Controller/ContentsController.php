@@ -57,7 +57,6 @@ class ContentsController extends AppController
         $user_id = $this->Auth->user("id");
         $cleared_list = $this->Content->getClearedList($user_id, $course_id);
         $this->set("cleared_list", $cleared_list);
-        $this->log($cleared_list);
 
         // 管理者かつ、学習履歴表示モードの場合、
         if ($this->action == "admin_record") {
@@ -66,7 +65,6 @@ class ContentsController extends AppController
                 $course_id,
                 $role
             );
-            //$this->log($contents);
         } else {
             // コースの閲覧権限の確認
             // if(! $this->Course->hasRight($this->Auth->user('id'), $course_id))
@@ -265,18 +263,15 @@ class ContentsController extends AppController
         if ($content_id != null) {
             $contentInfo = $this->Content->getContentInfo($content_id);
             $exists_url = $contentInfo["Content"]["text_url"];
-            //$this->log($exits_url);
             $this->set("exists_url", $exists_url);
         }
         //前提となるコンテンツを追加する．
         $content_list = $this->Content->getContentList($course_id);
-        //$this->log($content_list);
         $selected_before_content = $contentInfo["Content"]["before_content"];
         $this->set("selected_before_content", $selected_before_content);
         $this->set("content_list", $content_list);
 
         if ($this->request->is(["post", "put"])) {
-            $this->log($this->request->data);
             if (Configure::read("demo_mode")) {
                 return;
             }
@@ -294,8 +289,6 @@ class ContentsController extends AppController
                 ] = $this->Content->getNextSortNo($course_id);
             }
 
-            //$this->log($this->request->data);
-
             if (
                 $this->request->data["Content"]["form_text_url"]["name"] !== ""
             ) {
@@ -309,8 +302,6 @@ class ContentsController extends AppController
                 if ($this->request->data["Content"]["kind"] == "slide") {
                     $file_url = $this->webroot . "slide/" . $file_name;
                     $file_path = "../webroot/slide";
-                    $this->log($file_url);
-                    $this->log($file_path);
                     $this->request->data["Content"]["file_name"] = str_replace(
                         ".zip",
                         "",
@@ -409,7 +400,6 @@ class ContentsController extends AppController
         $original_file_name = "";
 
         if ($this->request->is(["post", "put"])) {
-            $this->log($this->request->data);
             if (Configure::read("demo_mode")) {
                 return;
             }

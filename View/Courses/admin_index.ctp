@@ -147,7 +147,6 @@
 						<tbody id="0">
 						
 						<?php foreach ($out_category_courses as $course): ?>
-						<?php $this->log($course['Course']);?>
 						<tr>
 							<td nowrap>
 								<?php

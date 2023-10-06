@@ -68,12 +68,10 @@ class EnqueteController extends AppController
         $enquete_history = $this->Enquete->find("first", [
             "conditions" => $conditions,
         ]);
-        //$this->log($enquete_history);
 
         $enquete_inputted = [];
         $enquete_inputted["Enquete"] = $enquete_history["Enquete"];
         $id = $enquete_history["Enquete"]["id"];
-        //$this->log($enquete_inputted);
 
         $this->set("enquete_inputted", $enquete_inputted);
 
@@ -154,8 +152,6 @@ class EnqueteController extends AppController
             $result = $this->paginate();
         }
 
-        //$this->log($result);
-
         $this->set("records", $result);
 
         //$groups = $this->Group->getGroupList();
@@ -167,7 +163,6 @@ class EnqueteController extends AppController
 
         $this->set("groups", $this->Group->find("list"));
         //$this->set('courses',    $this->Course->find('list'));
-        //$this->log($this->Course->find('list'));
         $this->set("group_id", $group_id);
         $this->set("name", $name);
         $this->set("period_list", Configure::read("period"));
@@ -317,7 +312,6 @@ class EnqueteController extends AppController
 
             fclose($fp);
         } else {
-            $this->log($this->request->query);
             if (@$this->request->query["cmd"] == "today") {
                 $from_date = [
                     "year" => date("Y"),
@@ -350,8 +344,6 @@ class EnqueteController extends AppController
                 $result = $this->paginate();
             }
 
-            //$this->log($result);
-
             $this->set("records", $result);
 
             //$groups = $this->Group->getGroupList();
@@ -363,7 +355,6 @@ class EnqueteController extends AppController
 
             $this->set("groups", $this->Group->find("list"));
             //$this->set('courses',    $this->Course->find('list'));
-            //$this->log($this->Course->find('list'));
             $this->set("group_id", $group_id);
             $this->set("name", $name);
             $this->set("period_list", Configure::read("period"));

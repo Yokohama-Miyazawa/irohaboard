@@ -37,9 +37,6 @@
           <div class="card-body">
             <pre><?php echo $detail['body']?></pre>
             <?php
-              
-              $this->log($detail);
-
               if(!empty($detail['url'])){
                 $url = $detail['url'];
                 // 相対URLの場合、絶対URLに変更する

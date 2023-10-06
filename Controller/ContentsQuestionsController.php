@@ -46,7 +46,6 @@ class ContentsQuestionsController extends AppController
                 "Content.id" => $content_id,
             ],
         ]);
-        //$this->log($content);
         $url = $content["Content"]["text_url"];
         $this->set("content_id", $content_id);
 
@@ -56,7 +55,6 @@ class ContentsQuestionsController extends AppController
         }
         //$url = urlencode($url);
         $this->set("text_url", $url);
-        //$this->log($url);
 
         if ($content["Content"]["kind"] == "slide") {
             $slide_url =
@@ -561,7 +559,6 @@ class ContentsQuestionsController extends AppController
     {
         $this->loadModel("Content");
         $slide_name = $this->Content->findFileName($content_id);
-        $this->log($slide_name);
         //レイアウトを適用しない（ビューは使用する。）
         $this->layout = "";
 

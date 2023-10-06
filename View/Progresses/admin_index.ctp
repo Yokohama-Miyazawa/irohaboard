@@ -20,9 +20,7 @@
 	</tr>
 	</thead>
 	<tbody>
-  <?php foreach ($progress_list as $progress): 
-  $this->log($progress);
-  ?>
+  <?php foreach ($progress_list as $progress): ?>
 	<tr>
 		<td nowrap>
 			<?php

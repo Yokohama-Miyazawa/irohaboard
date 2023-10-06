@@ -51,7 +51,6 @@ class RecentStatesController extends AppController
             $username = $conditions["Search"]["username"];
             $name = $conditions["Search"]["name"];
 
-            //$this->log($name);
             $user_list = $this->User->findUserList($username, $name);
         } else {
             $user_list = $this->User->getUserList();
@@ -156,7 +155,6 @@ class RecentStatesController extends AppController
         // user_idとコース名・合格率の配列
         $members_cleared_rates = $this->Course->findGroupClearedRate($members);
         $this->set("members_cleared_rates", $members_cleared_rates);
-        $this->log($members_cleared_rates);
 
         // user_idと過去4回分SOAPの配列を作る
         $members_recent_soaps = $this->Soap->findGroupRecentSoaps($members);
