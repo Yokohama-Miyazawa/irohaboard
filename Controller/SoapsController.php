@@ -376,6 +376,59 @@ class SoapsController extends AppController
             return $this->redirect(["action" => "index"]);
         }
     }
+
+    public function admin_id_edit($soap_id)
+    {
+        $this->loadModel("Course");
+        $this->loadModel("User");
+
+        $edited_soap = $this->Soap->find("first", [
+            "fields" => [
+                "Soap.id", "Soap.user_id", "Soap.group_id", "Soap.current_status", "Soap.S", "Soap.O", "Soap.A", "Soap.P", "Soap.comment", "Soap.created",
+                "User.name", "User.pic_path",
+                "Group.title"
+            ],
+            "conditions" => [
+                "Soap.id" => $soap_id,
+            ],
+        ]);
+        $this->set("edited_soap", $edited_soap["Soap"]);
+        $this->set("user_info", $edited_soap["User"]);
+        $this->set("gruup_info", $edited_soap["Group"]);
+
+        // SOAP入力欄の最大文字数
+        $input_max_length = 200;
+        $this->set("input_max_length", $input_max_length);
+
+        //グループ一覧を作り，配列の形を整形する
+        $group_list = $this->Group->find("list");
+        $this->set("group_list", $group_list);
+
+        //教材現状
+        $course_list = $this->Course->find("list");
+        $this->set("course_list", $course_list);
+
+        //登録
+        if ($this->request->is("post")) {
+            $this->loadModel("Record");
+            $soap = $this->request->data["Soap"];
+            // SOAP記入日で最後に勉強した教材を取得
+            $inputed = $soap["today_date"];
+            $input_date = $inputed["year"] . "-" . $inputed["month"] . "-" . $inputed["day"];
+            $soap["studied_content"] = $this->Record->studiedContentOnTheDate(
+                $soap["user_id"],
+                $input_date
+            );
+            if ($this->Soap->save($soap)) {
+                $this->Flash->success(__("更新しました、ありがとうございます"));
+                return $this->redirect([
+                    "controller" => "soaprecords",
+                    "action" => "admin_index",
+                ]);
+            }
+            $this->Flash->error(__("更新は失敗しました、もう一回やってください。"));
+        }
+    }
 }
 
 ?>
