@@ -264,7 +264,12 @@ class UsersCoursesController extends AppController
             );
             $this->set("have_to_write_today_goal", $have_to_write_today_goal);
 
-            $group_list = $this->Group->find("list");
+            //グループリストを生成(公開状態のグループのみ)
+            $group_list = $this->Group->find("list", [
+                "conditions" => [
+                    "status" => 1,
+                ],
+            ]);
             $this->set("group_list", $group_list);
             $group_id = $this->User->findUserGroup($user_id);
             $this->set("group_id", $group_id);
