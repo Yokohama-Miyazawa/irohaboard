@@ -111,7 +111,15 @@
 			}
 		?>
 			<tr>
-				<td nowrap class="ib-col-date"><?php echo h(Utils::getYMD($record['Soap']['created'])); ?>&nbsp;</td>
+				<td nowrap class="ib-col-date">
+					<?php
+						echo $this->Html->link(h(Utils::getYMD($record['Soap']['created'])),
+							array(
+								'controller' => 'soaps',
+								'action' => 'admin_id_edit', $record['Soap']['id']
+						));
+					?>
+				</td>
 				<td>
 					<?php
 						echo $this->Html->link(h($record['User']['name']),
