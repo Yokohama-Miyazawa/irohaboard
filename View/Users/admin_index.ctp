@@ -110,7 +110,7 @@
 			<?php if($loginedUser['role']=='admin') {?>
 			<td class="ib-col-action">
 				<button type="button" class="btn btn-success"
-					onclick="window.open('<?php echo Router::url(array('action' => 'edit', $user['User']['id']))?>', '_blank','width=900,height=600,resizable=no')">編集</button>
+					onclick="location.href='<?php echo Router::url(array('action' => 'edit', $user['User']['id']))?>'">編集</button>
 			</td>
 			<?php }?>
 		</tr>
