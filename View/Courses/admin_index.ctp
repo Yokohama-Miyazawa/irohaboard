@@ -85,6 +85,8 @@
 						<thead>
 						<tr>
 							<th nowrap><?php echo __('コース名'); ?></th>
+							<th nowrap><?php echo __('公開/非公開'); ?></th>
+							<th nowrap><?php echo __('初期受講'); ?></th>
 							<th nowrap class="ib-col-datetime"><?php echo __('作成日時'); ?></th>
 							<th nowrap class="ib-col-datetime"><?php echo __('更新日時'); ?></th>
 							<th class="ib-col-action"><?php echo __('Actions'); ?></th>
@@ -99,6 +101,8 @@
 									echo $this->Form->hidden('id', array('id'=>'', 'class'=>$category_info['Category']['id'].'_id', 'value'=>$course['id']));
 								?>
 							</td>
+							<td nowrap><?php echo h(Configure::read('content_status.'.$course['status'])); ?></td>
+							<td nowrap><?php echo h(Configure::read('initial_course.'.$course['initial_taken'])); ?></td>
 							<td nowrap class="ib-col-datetime"><?php echo h(Utils::getYMDHN($course['created'])); ?>&nbsp;</td>
 							<td nowrap class="ib-col-datetime"><?php echo h(Utils::getYMDHN($course['modified'])); ?>&nbsp;</td>
 							<td class="ib-col-action">
@@ -139,6 +143,8 @@
 						<thead>
 						<tr>
 							<th nowrap><?php echo __('コース名'); ?></th>
+							<th nowrap><?php echo __('公開/非公開'); ?></th>
+							<th nowrap><?php echo __('初期受講'); ?></th>
 							<th nowrap class="ib-col-datetime"><?php echo __('作成日時'); ?></th>
 							<th nowrap class="ib-col-datetime"><?php echo __('更新日時'); ?></th>
 							<th class="ib-col-action"><?php echo __('Actions'); ?></th>
@@ -154,6 +160,8 @@
 									echo $this->Form->hidden('id', array('id'=>'', 'class'=>'0_id', 'value'=>$course['Course']['id']));
 								?>
 							</td>
+							<td nowrap><?php echo h(Configure::read('content_status.'.$course['Course']['status'])); ?></td>
+							<td nowrap><?php echo h(Configure::read('initial_course.'.$course['Course']['initial_taken'])); ?></td>
 							<td nowrap class="ib-col-datetime"><?php echo h(Utils::getYMDHN($course['Course']['created'])); ?>&nbsp;</td>
 							<td nowrap class="ib-col-datetime"><?php echo h(Utils::getYMDHN($course['Course']['modified'])); ?>&nbsp;</td>
 							<td class="ib-col-action">

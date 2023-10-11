@@ -47,6 +47,17 @@
 					'options' => Configure::read('content_status')
 					)
 				);
+				echo $this->Form->input('initial_taken',	array(
+					'type' => 'radio',
+					'before' => '<label class="col col-sm-3 control-label">初期受講コース</label>',
+					'after' => '<span class="status-exp">　' . Configure::read('initial_course')[1] . 'と設定した場合、追加された受講生は自動でこのコースを受講可能になります。</span>',
+					'separator' => '　',
+					'legend' => false,
+					'class' => false,
+					'default' => 0,
+					'options' => Configure::read('initial_course'),
+					)
+				);
 				echo $this->Form->input('introduction',	array('label' => __('コース紹介')));
 				echo $this->Form->input('comment',		array('label' => __('備考')));
 			?>

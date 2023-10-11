@@ -10,6 +10,7 @@
 
 App::uses("AppModel", "Model");
 App::import("Model", "Record");
+App::import("Model", "Course");
 
 /**
  * UsersCourse Model
@@ -171,5 +172,38 @@ EOF;
 
         // データベースを更新
         $this->save($save_info);
+    }
+
+    // 初期受講コースに設定されているコースを、ユーザの受講コースに追加
+    public function setInitialTakenCourses($user_id) {
+        $this->Course = new Course();
+        $initial_courses = $this->Course->find("list", [
+            "fields" => ["id"],
+            "conditions" => [
+                "initial_taken" => 1,
+            ],
+            "recursive" => -1,
+        ]);
+
+        $new_data = [];
+        foreach ($initial_courses as $course) {
+            $data = $this->find("first", [
+                "conditions" => [
+                    "user_id" => $user_id,
+                    "course_id" => $course,
+                ],
+                "recursive" => -1,
+            ]);
+            if (empty($data)) {
+                array_push($new_data, [
+                    "user_id" => $user_id,
+                    "course_id" => $course,
+                ]);
+            }
+        }
+
+        if (!empty($new_data)) {
+            $this->saveMany($new_data);
+        }
     }
 }
