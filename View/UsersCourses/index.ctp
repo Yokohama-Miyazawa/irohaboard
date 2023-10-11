@@ -93,9 +93,6 @@
     									case 4:
     	    								echo __("早退");
     	    								break;
-										case 5:
-											echo __("時限変更");
-											break;
 										default:
 											echo __("出席予定");
 											break;
