@@ -391,13 +391,6 @@ class User extends AppModel
         return $result;
     }
 
-    public function getOsList()
-    {
-        $sql = "SELECT * FROM ib_os_types";
-        $data = $this->query($sql);
-        return $data;
-    }
-
     public function calcGrade($birthyear)
     {
         if ($birthyear <= 0) {
