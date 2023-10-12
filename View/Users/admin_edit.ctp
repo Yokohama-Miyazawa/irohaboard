@@ -173,8 +173,7 @@ $(function(){
           	'class' => 'info-input-label'
         	),
         	'required' => false,
-        	'options' => $os_list,
-        	'selected' => $os_id,
+        	'options' => Configure::read('os_type'),
         	'empty' => ''
         ));
 			?>
@@ -191,7 +190,6 @@ $(function(){
         	'div' => false,
         	'class' => false,
         	'options' => array('1限','2限'),
-        	'selected' => $time_id,
         	'empty' => ''
         ));
 			?>
@@ -220,7 +218,6 @@ $(function(){
         	'div' => false,
         	'class' => false,
         	'options' => $group_list,
-        	'selected' => $group_id,
         	'empty' => ''
         ));
 			?>
