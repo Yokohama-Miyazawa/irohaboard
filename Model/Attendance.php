@@ -80,6 +80,21 @@ class Attendance extends AppModel
         return false;
     }
 
+    public function isExistThePeriodTheUserAttendanceInfo($user_id, $date_id, $period)
+    {
+        $data = $this->find("first", [
+            "conditions" => [
+                "User.id" => $user_id,
+                "Date.id" => $date_id,
+                "Attendance.period" => $period,
+            ],
+        ]);
+        if ($data) {
+            return true;
+        }
+        return false;
+    }
+
     public function getAttendanceInfo()
     {
         //今日の日付を生成
@@ -105,9 +120,10 @@ class Attendance extends AppModel
         $is_exist_attendance_info = $this->isExistAttendanceInfo($date_id);
         $user_list = $this->User->find("all", [
             "conditions" => [
-                "User.role" => "user",
+                "role" => "user",
             ],
-            "order" => "User.id ASC",
+            "order" => "id ASC",
+            "recursive" => -1,
         ]);
         foreach ($user_list as $user) {
             $user_id = $user["User"]["id"];
@@ -141,6 +157,16 @@ class Attendance extends AppModel
                 ];
                 $this->create();
                 $this->save($init_info);
+            } else if (!$this->isExistThePeriodTheUserAttendanceInfo($user_id, $date_id, $period)) {
+                $data = $this->find("first", [
+                    "conditions" => [
+                        "user_id" => $user_id,
+                        "date_id" => $date_id,
+                    ],
+                    "recursive" => -1,
+                ]);
+                $data["Attendance"]["period"] = $period;
+                $this->save($data);
             }
         }
     }

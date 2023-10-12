@@ -313,16 +313,6 @@ class UsersController extends AppController
 
         $this->loadModel("UsersCourse");
 
-        $rows = $this->User->getOsList();
-
-        $os_list = [];
-        foreach ($rows as $row) {
-            $os_id = $row["ib_os_types"]["id"];
-            $os_type = $row["ib_os_types"]["type"];
-            $os_list[$os_id] = $os_type;
-        }
-        $this->set("os_list", $os_list);
-
         $username = "";
 
         if ($this->request->is(["post", "put"])) {
