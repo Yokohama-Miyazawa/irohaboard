@@ -11,6 +11,7 @@
 App::uses("AppController", "Controller");
 App::uses("Group", "Group");
 App::uses("Attendance", "Attendance");
+App::uses("UsersCourse", "UsersCourse");
 App::uses("CakeEmail", "Network/Email");
 
 /**
@@ -310,6 +311,8 @@ class UsersController extends AppController
         $group_list = $this->Group->find("list");
         $this->set("group_list", $group_list);
 
+        $this->loadModel("UsersCourse");
+
         $username = "";
 
         if ($this->request->is(["post", "put"])) {
@@ -349,6 +352,7 @@ class UsersController extends AppController
                         $user_id,
                         $period
                     );
+                    $this->UsersCourse->setInitialTakenCourses($user_id);
                 }
 
                 /*

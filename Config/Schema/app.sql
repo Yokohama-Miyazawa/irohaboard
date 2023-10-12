@@ -184,6 +184,7 @@ CREATE TABLE IF NOT EXISTS `ib_courses` (
   `user_id` int(8) NOT NULL,
   `before_course` int(8) DEFAULT NULL,
   `status` int(1) NOT NULL DEFAULT '1',
+  `initial_taken` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -10,6 +10,7 @@
 
 $config["group_status"] = ["1" => "公開", "0" => "非公開"];
 $config["course_status"] = ["1" => "有効", "0" => "無効"];
+$config["initial_course"] = ["1" => "有効", "0" => "無効"];
 $config["content_status"] = ["1" => "公開", "0" => "非公開"];
 $config["content_kind"] = [
     "label" => "ラベル",
