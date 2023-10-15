@@ -242,19 +242,23 @@ class SoapRecordsController extends AppController
         $last_day = $this->Date->getLastClassDate("Y-m-d");
 
         $last_class_date_id = $this->Date->getLastClassId();
+
         //１限に出席した人のリスト
-        $period_1_attendance_user_list = $this->Attendance->find("all", [
+        $period_1_attendance_user_list = $this->Attendance->find("list", [
+            "fields" => [
+                "User.id",
+                "User.name",
+            ],
             "conditions" => [
                 "Attendance.date_id" => $last_class_date_id,
                 "Attendance.period" => 0,
                 "Attendance.status" => 1,
             ],
             "order" => "Attendance.user_id ASC",
+            "recursive" => 0,
         ]);
 
-        $period_1_attendance_ids = array_map(function($attended){
-            return $attended["User"]["id"];
-        }, $period_1_attendance_user_list);
+        $period_1_attendance_ids = array_keys($period_1_attendance_user_list);
 
         $today = date("Y-m-d");
         $from_date =
@@ -274,16 +278,12 @@ class SoapRecordsController extends AppController
          *   [cnt] => number
          * )
          */
-        $period_1_submitted = [];
-        $period_1_submitted["Member"] = "";
-        $period_1_submitted["Count"] = 0;
 
-        $period_1_unsubmitted = [];
-        $period_1_unsubmitted["Member"] = "";
-        $period_1_unsubmitted["Count"] = 0;
-
-        $soap_data_1 = $this->Soap->find("all", [
-            "fields" => ["DISTINCT User.id", "User.name", "Soap.id"],
+        $soap_data_1 = $this->Soap->find("list", [
+            "fields" => [
+                "User.id",
+                "User.name",
+            ],
             "conditions" => [
                 "User.id" => $period_1_attendance_ids,
                 "Soap.created BETWEEN ? AND ?" => [
@@ -291,39 +291,51 @@ class SoapRecordsController extends AppController
                     $to_date . " 23:59:59",
                 ],
             ],
+            "recursive" => 0,
         ]);
 
-        foreach ($soap_data_1 as $soap_datum) {
-            if (isset($soap_datum["Soap"])) {
-                $period_1_submitted["Member"] =
-                    $period_1_submitted["Member"] .
-                    $soap_datum["User"]["name"] .
-                    "<br>";
-                $period_1_submitted["Count"] += 1;
-            } else {
-                $period_1_unsubmitted["Member"] =
-                    $period_1_unsubmitted["Member"] .
-                    $soap_datum["User"]["name"] .
-                    "<br>";
-                $period_1_unsubmitted["Count"] += 1;
-            }
-        }
+        $period_1_submitted_array = array_filter(
+            $period_1_attendance_user_list,
+            function($k) use($soap_data_1) {
+                return isset($soap_data_1[$k]);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+        $period_1_submitted = [
+            "Member" => implode("<br>", $period_1_submitted_array),
+            "Count" => count($period_1_submitted_array),
+        ];
+
+        $period_1_unsubmitted_array = array_filter(
+            $period_1_attendance_user_list,
+            function($k) use($soap_data_1) {
+                return !isset($soap_data_1[$k]);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+        $period_1_unsubmitted = [
+            "Member" => implode("<br>", $period_1_unsubmitted_array),
+            "Count" => count($period_1_unsubmitted_array),
+        ];
 
         $this->set(compact("period_1_submitted", "period_1_unsubmitted"));
 
         //２限に出席した人のリスト
-        $period_2_attendance_user_list = $this->Attendance->find("all", [
+        $period_2_attendance_user_list = $this->Attendance->find("list", [
+            "fields" => [
+                "User.id",
+                "User.name",
+            ],
             "conditions" => [
                 "Attendance.date_id" => $last_class_date_id,
                 "Attendance.period" => 1,
                 "Attendance.status" => 1,
             ],
             "order" => "Attendance.user_id ASC",
+            "recursive" => 0,
         ]);
 
-        $period_2_attendance_ids = array_map(function($attended){
-            return $attended["User"]["id"];
-        }, $period_2_attendance_user_list);
+        $period_2_attendance_ids = array_keys($period_2_attendance_user_list);
 
         /**
          * period_2_submitted = array(
@@ -333,16 +345,12 @@ class SoapRecordsController extends AppController
          *   [cnt] => number
          * )
          */
-        $period_2_submitted = [];
-        $period_2_submitted["Member"] = "";
-        $period_2_submitted["Count"] = 0;
 
-        $period_2_unsubmitted = [];
-        $period_2_unsubmitted["Member"] = "";
-        $period_2_unsubmitted["Count"] = 0;
-
-        $soap_data_2 = $this->Soap->find("all", [
-            "fields" => ["DISTINCT User.id", "User.name", "Soap.id"],
+        $soap_data_2 = $this->Soap->find("list", [
+            "fields" => [
+                "User.id",
+                "User.name",
+            ],
             "conditions" => [
                 "User.id" => $period_2_attendance_ids,
                 "Soap.created BETWEEN ? AND ?" => [
@@ -350,23 +358,32 @@ class SoapRecordsController extends AppController
                     $to_date . " 23:59:59",
                 ],
             ],
+            "recursive" => 0,
         ]);
 
-        foreach ($soap_data_2 as $soap_datum) {
-            if (isset($soap_datum["Soap"])) {
-                $period_2_submitted["Member"] =
-                    $period_2_submitted["Member"] .
-                    $soap_datum["User"]["name"] .
-                    "<br>";
-                $period_2_submitted["Count"] += 1;
-            } else {
-                $period_2_unsubmitted["Member"] =
-                    $period_2_unsubmitted["Member"] .
-                    $soap_datum["User"]["name"] .
-                    "<br>";
-                $period_2_unsubmitted["Count"] += 1;
-            }
-        }
+        $period_2_submitted_array = array_filter(
+            $period_2_attendance_user_list,
+            function($k) use($soap_data_2) {
+                return isset($soap_data_2[$k]);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+        $period_2_submitted = [
+            "Member" => implode("<br>", $period_2_submitted_array),
+            "Count" => count($period_2_submitted_array),
+        ];
+
+        $period_2_unsubmitted_array = array_filter(
+            $period_2_attendance_user_list,
+            function($k) use($soap_data_2) {
+                return !isset($soap_data_2[$k]);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+        $period_2_unsubmitted = [
+            "Member" => implode("<br>", $period_2_unsubmitted_array),
+            "Count" => count($period_2_unsubmitted_array),
+        ];
 
         $this->set(compact("period_2_submitted", "period_2_unsubmitted"));
 
