@@ -10,6 +10,7 @@ $(function(){
   setInputLengthChecker("<?php echo "#".$user_id."Comment"; ?>", <?php echo h($input_max_length); ?>);
 });
 </script>
+<div><?php echo $this->Html->link(__('<< 戻る'), array('controller' => 'soaprecords', 'action' => 'index'))?></div>
 <div class = "admin-student_edit-index">
   <div class = "ib-page-title"><?php echo __('SOAP編集')?></div>
   <br><br>
