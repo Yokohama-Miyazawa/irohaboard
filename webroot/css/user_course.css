@@ -195,4 +195,40 @@
   top: 50%;
   transform: translate(-50%, -50%);
   width: 60%;
+  height: 500px;
+}
+
+.tab-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+.tab-label {
+  color: White;
+  background: LightGray;
+  margin: 0 auto;
+  text-align: center;
+  padding: 3px 12px;
+  order: -1;
+  width: 45%;
+  height: 2em;
+}
+.tab-content {
+  width: 100%;
+  display: none;
+}
+/* アクティブなタブ（出席） */
+.tab-switch:checked+.tab-label#attend-label {
+  background: DeepSkyBlue
+}
+/* アクティブなタブ（欠席） */
+.tab-switch:checked+.tab-label#absent-label {
+  background: Crimson;
+}
+/* アクティブなコンテンツ */
+.tab-switch:checked+.tab-label+.tab-content {
+  display: block;
+}
+/* ラジオボタン非表示 */
+.tab-switch {
+  display: none;
 }

@@ -16,9 +16,12 @@
 	<?php if($have_to_write_today_goal){ ?>
 		<div class="modal js-modal">
 			<div class="modal__bg"></div>
-			<div class="modal__content">
-				<p>今日の担当講師を選び、今日の授業のゴールを書いてください。これを送信すると出席扱いになります。</p>
-				<?php
+			<div class="modal__content tab-wrap">
+				<input id="TAB-ATTEND" type="radio" name="TAB" class="tab-switch" checked="checked" />
+					<label class="tab-label" id="attend-label" for="TAB-ATTEND">出席</label>
+				<div class="tab-content attend">
+					<p>今日の担当講師を選び、今日の授業のゴールを書いてください。これを送信すると出席扱いになります。</p>
+					<?php
 					echo $this->Form->create(false,['type' => 'post','url'=> ['controller' => 'enquete','action' => 'index'],'novalidate' => true]);
 					echo $this->Form->hidden('group_id', array('value' => $group_id));
 
@@ -32,7 +35,7 @@
 						'class' => '',
 						'required'=> 'required',
 						'options' => $group_list,
-						'empty' => '',
+						'empty' => $group_list[$group_id],
 						'value' => $enquete_inputted['Enquete']['group_id'],
 						'style' => ''
 					));
@@ -49,9 +52,32 @@
 						'value' => $enquete_inputted['Enquete']['today_goal']
 					));
 					echo "</div>";
-				?>
-				<input type="submit" class="btn btn-info btn-add" value="送信" onclick="return check()">
-				<?php echo $this->Form->end(); ?>
+					?>
+					<input type="submit" class="btn btn-info btn-add" value="送信" onclick="return check()">
+					<?php echo $this->Form->end(); ?>
+				</div>
+				<input id="TAB-ABSENT" type="radio" name="TAB" class="tab-switch" />
+					<label class="tab-label" id="absent-label" for="TAB-ABSENT">欠席</label>
+				<div class="tab-content absent">
+					<?php
+					echo $this->Form->create(false, ['type' => 'post','url'=> ['controller' => 'attendances','action' => 'edit', $today_attendance_id], 'novalidate' => true]);
+					echo $this->Form->hidden('Attendance.status', array('value' => 0));
+					echo $this->Form->input('Attendance.reason', array(
+					  'label' => __('欠席理由を書いてください。'),
+					  'type' => 'textarea',
+					  'value' => $attendance_reason,
+					  'div' => false,
+					  'required'=> true,
+					  'class' => '',
+					  'style' => '',
+					));
+					echo $this->Form->submit(__('送信'), array(
+					  'class' => 'btn btn-info btn-info',
+					  'div' => false,
+					));
+					echo $this->Form->end();
+					?>
+				</div>
 			</div>
 		</div>
 	<?php } ?>
