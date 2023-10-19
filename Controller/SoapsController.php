@@ -65,28 +65,26 @@ class SoapsController extends AppController
         $today_date = isset($this->request->query["today_date"])
             ? $this->request->query["today_date"]
             : ["year" => date("Y"), "month" => date("m"), "day" => date("d")];
-
         $this->set("today_date", $today_date);
 
-        //提出したアンケートを検索（今日の日付）
+        // 最後の授業日
+        $last_lecture_date_info = $this->Date->find("first", [
+            "fields" => ["id", "date"],
+            "conditions" => [
+                "date <= " => date("Y-m-d"),  // 今日以前の授業日
+            ],
+            "order" => "date DESC",
+            "recursive" => -1,
+        ]);
+        $last_lecture_date = $last_lecture_date_info["Date"]["date"];
 
+        //提出したアンケートを検索（直近の授業日付）
         $conditions = [];
         $conditions["Enquete.group_id"] = $group_id;
-
         $conditions["Enquete.created BETWEEN ? AND ?"] = [
-            $today_date["year"] .
-            "-" .
-            $today_date["month"] .
-            "-" .
-            $today_date["day"],
-            $today_date["year"] .
-            "-" .
-            $today_date["month"] .
-            "-" .
-            $today_date["day"] .
-            " 23:59:59",
+            $last_lecture_date,
+            date("Y-m-d H:i:s"),
         ];
-
         $enquete_history = $this->Enquete->find("all", [
             "conditions" => $conditions,
         ]);
@@ -122,11 +120,6 @@ class SoapsController extends AppController
 
         //入力したSOAPを検索（前回の授業から）
         $conditions = [];
-
-        $attendance_info = $this->Attendance->find("first", [
-            "conditions" => [],
-            "order" => "Attendance.created DESC",
-        ]);
 
         $today = date("Y-m-d");
         $fdate =
@@ -239,21 +232,23 @@ class SoapsController extends AppController
             : ["year" => date("Y"), "month" => date("m"), "day" => date("d")];
         $this->set("today_date", $today_date);
 
-        //提出したアンケートを検索（今日の日付）
+        // 最後の授業日
+        $last_lecture_date_info = $this->Date->find("first", [
+            "fields" => ["id", "date"],
+            "conditions" => [
+                "date <= " => date("Y-m-d"),  // 今日以前の授業日
+            ],
+            "order" => "date DESC",
+            "recursive" => -1,
+        ]);
+        $last_lecture_date = $last_lecture_date_info["Date"]["date"];
+
+        //提出したアンケートを検索（直近の授業日付）
         $conditions = [];
         $conditions["Enquete.user_id"] = $user_id;
         $conditions["Enquete.created BETWEEN ? AND ?"] = [
-            $today_date["year"] .
-            "-" .
-            $today_date["month"] .
-            "-" .
-            $today_date["day"],
-            $today_date["year"] .
-            "-" .
-            $today_date["month"] .
-            "-" .
-            $today_date["day"] .
-            " 23:59:59",
+            $last_lecture_date,
+            date("Y-m-d H:i:s"),
         ];
         $enquete_history = $this->Enquete->find("all", [
             "conditions" => $conditions,
@@ -290,16 +285,11 @@ class SoapsController extends AppController
         $conditions = [];
         $conditions["Soap.user_id"] = $user_id;
 
-        $attendance_info = $this->Attendance->find("first", [
-            "conditions" => [],
-            "order" => "Attendance.created DESC",
-        ]);
-
         $today = date("Y-m-d");
         $fdate =
-            date("w") == 0
+            date("w", strtotime($today)) == 0  // 今日は日曜日か
                 ? $today
-                : date("Y-m-d", strtotime(" last sunday ", strtotime($today)));
+                : date("Y-m-d", strtotime(" last sunday ", strtotime($today)));  // 日曜日でないなら直前の日曜日を取得
 
         $lecture_date_info = $this->Date->find("first", [
             "fields" => ["id", "date"],

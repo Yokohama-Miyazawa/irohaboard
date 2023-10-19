@@ -64,7 +64,7 @@ $(function(){
 						'dateFormat' => 'YMD',
 						'monthNames' => false,
 						'timeFormat' => '24',
-            'div' => false,
+						'div' => false,
 						'minYear' => date('Y') - 1,
 						'maxYear' => date('Y'),
 						'separator' => ' / ',
@@ -129,9 +129,26 @@ $(function(){
   	?>
     </div>
 		<div class = "enquete">
-			<div class = "enquete_headline"><?php echo __('今日の感想:');?></div>
-			<?php //$this->log($enquete_inputted[$user_id]['today_impressions']);?>
-			<?php echo h($enquete_inputted[$user_id]['today_impressions']);?>
+			<div class="enquete_headline">アンケート内容</div>
+			<div class="card today_impressions">
+				<div class = "card-header"><?php echo __('今日の感想');?></div>
+				<div class="card-body"><?php echo h($enquete_inputted[$user_id]['today_impressions']);?></div>
+			</div>
+			<div class="card today_goal">
+				<div class = "card-header">
+					<?php
+						$cleared_or_not = $enquete_inputted[$user_id]['today_goal_cleared'] ? "達成できた" : "達成できなかった";
+						echo h('今日の授業のゴール（' . $cleared_or_not .'）');
+					?>
+				</div>
+				<div class="card-body"><?php echo h($enquete_inputted[$user_id]['today_goal']);?></div>
+			</div>
+			<?php if(!$enquete_inputted[$user_id]['today_goal_cleared']){?>
+			<div class="card today_false_reason">
+				<div class="card-header"><?php echo __('今日のゴールが達成できなかった理由');?></div>
+				<div class="card-body"><?php echo h($enquete_inputted[$user_id]['today_false_reason']);?></div>
+			</div>
+			<?php }?>
 		</div>
   </div>
   <div class = "under_element"></div>
