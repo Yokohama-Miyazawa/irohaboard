@@ -200,7 +200,7 @@ class SoapRecordsController extends AppController
                 ];
             }
             $this->Paginator->settings["conditions"] = $conditions;
-            $this->Paginator->settings["order"] = "Soap.created desc";
+            $this->Paginator->settings["order"] = "User.username asc";
             $this->Paginator->settings["limit"] = 100;
             $this->Paginator->settings["maxLimit"] = 100;
             $this->Soap->recursive = 0;
