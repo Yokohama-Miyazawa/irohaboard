@@ -93,9 +93,10 @@
 		<thead>
 			<tr>
 				<th class="ib-col-date"><?php echo $this->Paginator->sort('created', '受講日'); ?></th>
-				<th nowrap><?php echo $this->Paginator->sort('User.name', '受講生名'); ?></th>
-				<th nowrap><?php echo $this->Paginator->sort('group_id', '担当講師名'); ?></th>
-				<th nowrap class="text-center"><?php echo $this->Paginator->sort('User.period', '受講時限'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('User.username', '受講生番号'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('User.name', '氏名'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('group_id', '担当講師'); ?></th>
+				<th nowrap class="text-center"><?php echo $this->Paginator->sort('User.period', '時限'); ?></th>
 				<th nowrap class="text-center"><?php echo $this->Paginator->sort('Course.title', '教材種別'); ?></th>
 				<th nowrap>SOAP</th>
 			</tr>
@@ -120,6 +121,7 @@
 						));
 					?>
 				</td>
+				<td> <?php echo h($record['User']['username']); ?> </td>
 				<td>
 					<?php
 						echo $this->Html->link(h($record['User']['name']),

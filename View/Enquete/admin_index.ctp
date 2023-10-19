@@ -11,9 +11,9 @@ function downloadCSV()
 }
 
 function setTodayDate(){
-		$("#EnqueteCmd").val("today");
-		$("#EnqueteAdminIndexForm").submit();
-		$("#EnqueteCmd").val("");
+	$("#EnqueteCmd").val("today");
+	$("#EnqueteAdminIndexForm").submit();
+	$("#EnqueteCmd").val("");
 }
 
 function dis_item(obj, className){
@@ -159,9 +159,10 @@ function dis_item(obj, className){
 		<thead>
 			<tr>
 				<th nowrap　class="ib-col-center"><?php echo $this->Paginator->sort('Enquete.created','提出日時')?>
+				<th nowrap><?php echo $this->Paginator->sort('User.username', '受講生番号'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('User.name', '氏名'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('Enquete.group_id', '担当講師'); ?></th>
-				<th nowrap><?php echo $this->Paginator->sort('User.period', '所属'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('User.period', '時限'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('Enquete.today_impressions', '今日の感想'); ?></th>
 				<th nowrap class="beforeGoalCleared" style="display : none;"><?php echo $this->Paginator->sort('Enquete.before_goal_cleared', '前回T/F'); ?></th>
 				<th nowrap class="beforeFalseReason" style="display : none;"><?php echo $this->Paginator->sort('Enquete.before_false_reason', '前回F理由'); ?></th>
@@ -182,7 +183,8 @@ function dis_item(obj, className){
 			}
 		?>
 			<tr>
-				<td nowrap><?php echo h(Utils::getYMDHN($record['Enquete']['created'])); ?>&nbsp;</td>
+				<td nowrap><?php echo h(Utils::getYMD($record['Enquete']['created'])); ?>&nbsp;</td>
+				<td nowrap> <?php echo h($record['User']['username']); ?> </td>
 				<td nowrap>
 					<?php
 						echo $this->Html->link(h($record['User']['name']),
