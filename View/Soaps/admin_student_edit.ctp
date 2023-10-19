@@ -10,6 +10,7 @@ $(function(){
   setInputLengthChecker("<?php echo "#".$user_id."Comment"; ?>", <?php echo h($input_max_length); ?>);
 });
 </script>
+<div><?php echo $this->Html->link(__('<< 戻る'), array('action' => 'find_by_student'))?></div>
 <div class = "admin-student_edit-index">
   <div class = "ib-page-title"><?php echo __('個別記入')?></div>
   <br><br>

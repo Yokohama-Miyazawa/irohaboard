@@ -61,11 +61,7 @@ class SoapsController extends AppController
         $input_max_length = 200;
         $this->set("input_max_length", $input_max_length);
 
-        //日付リスト
-        $today_date = isset($this->request->query["today_date"])
-            ? $this->request->query["today_date"]
-            : ["year" => date("Y"), "month" => date("m"), "day" => date("d")];
-        $this->set("today_date", $today_date);
+        $this->set("group_id", $group_id);
 
         // 最後の授業日
         $last_lecture_date_info = $this->Date->find("first", [
@@ -78,9 +74,63 @@ class SoapsController extends AppController
         ]);
         $last_lecture_date = $last_lecture_date_info["Date"]["date"];
 
+        //メンバーリスト
+        $user_list = $this->User->find("list", [
+            "conditions" => [
+                "role" => "user",
+            ],
+        ]);
+        $this->set("user_list", $user_list);
+
+        //グループ内の出席メンバーを探す
+        //$members = $this->User->findAllStudentInGroup($group_id);
+        $members = $this->Attendance->find("all", [
+            "fields" => [
+                "User.id",
+                "User.group_id"
+            ],
+            "conditions" => [
+                "User.group_id" => $group_id,
+                "Attendance.status" => 1,
+                "Attendance.login_time BETWEEN ? AND ?" => [
+                    $last_lecture_date,
+                    date("Y-m-d H:i:s"),
+                ]
+            ],
+            "order" => [
+                "User.username" => "ASC"
+            ],
+        ]);
+        $this->set("members", $members);
+
+        // グループ内ユーザのID一覧
+        $members_ids = array_map(function($member){
+                return $member['User']['id'];
+            },
+            $members
+        );
+
+        // user_idとpic_pathの配列
+        $group_pic_paths = $this->User->findGroupPicPaths($members);
+        $this->set("group_pic_paths", $group_pic_paths);
+
+        // 公開状態のグループ一覧を作り，配列の形を整形する
+        $group_list = $this->Group->find("list", [
+            "conditions" => [
+                "status" => 1,
+            ],
+        ]);
+        $this->set("group_list", $group_list);
+
+        //日付リスト
+        $today_date = isset($this->request->query["today_date"])
+            ? $this->request->query["today_date"]
+            : ["year" => date("Y"), "month" => date("m"), "day" => date("d")];
+        $this->set("today_date", $today_date);
+
         //提出したアンケートを検索（直近の授業日付）
         $conditions = [];
-        $conditions["Enquete.group_id"] = $group_id;
+        $conditions["Enquete.user_id"] = $members_ids;
         $conditions["Enquete.created BETWEEN ? AND ?"] = [
             $last_lecture_date,
             date("Y-m-d H:i:s"),
@@ -96,27 +146,6 @@ class SoapsController extends AppController
         }
 
         $this->set("enquete_inputted", $enquete_inputted);
-
-        //メンバーリスト
-
-        $user_list = $this->User->find("list");
-        $this->set("user_list", $user_list);
-
-        //グループ内のメンバーを探す
-        $members = $this->User->findAllStudentInGroup($group_id);
-        $this->set("members", $members);
-
-        // user_idとpic_pathの配列
-        $group_pic_paths = $this->User->findGroupPicPaths($members);
-        $this->set("group_pic_paths", $group_pic_paths);
-
-        // 公開状態のグループ一覧を作り，配列の形を整形する
-        $group_list = $this->Group->find("list", [
-            "conditions" => [
-                "status" => 1,
-            ],
-        ]);
-        $this->set("group_list", $group_list);
 
         //入力したSOAPを検索（前回の授業から）
         $conditions = [];
@@ -173,7 +202,7 @@ class SoapsController extends AppController
                 $today_date["day"];
 
             foreach ($soaps as &$soap) {
-                if (
+                if (  // S・O・A・Pのいずれも書かれていないものは保存しない
                     $soap["S"] == "" &&
                     $soap["O"] == "" &&
                     $soap["A"] == "" &&

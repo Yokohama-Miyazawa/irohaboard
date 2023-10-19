@@ -1,18 +1,19 @@
 <?php echo $this->element('admin_menu');?>
 <?php echo $this->Html->css('soap');?>
 <?php echo $this->Html->script('custom.js');?>
+<div><?php echo $this->Html->link(__('<< 戻る'), array('action' => 'find_by_group'))?></div>
 <div class = "admin-group_edit-index">
   <?php if (empty($members)): ?>
   <div class = "ib-page-title"><?php echo __('担当受講生がいません。')?></div>
   <?php else: ?>
-  <div class = "ib-page-title"><?php echo __('担当受講生一覧')?></div>
+  <div class = "ib-page-title"><?php echo h($group_list[$group_id])?>&nbsp;<?php echo __('担当受講生一覧')?></div>
   <br><br>
   <?php //$this->log($members);?>
   <?php foreach($members as $member):?>
   <div class = "member-input">
     <?php
 			$user_id = $member['User']['id'];
-			$group_id = $member['User']['group_id'];
+			//$group_id = $member['User']['group_id'];
     ?>
 	<script>
 	  $(function(){
