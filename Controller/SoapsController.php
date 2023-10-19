@@ -114,8 +114,12 @@ class SoapsController extends AppController
         $group_pic_paths = $this->User->findGroupPicPaths($members);
         $this->set("group_pic_paths", $group_pic_paths);
 
-        //グループ一覧を作り，配列の形を整形する
-        $group_list = $this->Group->find("list");
+        // 公開状態のグループ一覧を作り，配列の形を整形する
+        $group_list = $this->Group->find("list", [
+            "conditions" => [
+                "status" => 1,
+            ],
+        ]);
         $this->set("group_list", $group_list);
 
         //日付リスト
@@ -296,8 +300,12 @@ class SoapsController extends AppController
 
         $this->set("user_id", $user_id);
 
-        //グループ一覧を作り，配列の形を整形する
-        $group_list = $this->Group->find("list");
+        // 公開状態のグループ一覧を作り，配列の形を整形する
+        $group_list = $this->Group->find("list", [
+            "conditions" => [
+                "status" => 1,
+            ],
+        ]);
         $this->set("group_list", $group_list);
 
         $this->set("today_date", $today_date);
@@ -419,8 +427,12 @@ class SoapsController extends AppController
         $input_max_length = 200;
         $this->set("input_max_length", $input_max_length);
 
-        //グループ一覧を作り，配列の形を整形する
-        $group_list = $this->Group->find("list");
+        // 公開状態のグループ一覧を作り，配列の形を整形する
+        $group_list = $this->Group->find("list", [
+            "conditions" => [
+                "status" => 1,
+            ],
+        ]);
         $this->set("group_list", $group_list);
 
         //教材現状
