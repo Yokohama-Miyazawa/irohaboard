@@ -51,7 +51,7 @@ class SoapsController extends AppController
   */
     public function admin_group_edit($group_id)
     {
-        $this->loadModel("Course");
+        $this->loadModel("UsersCourse");
         $this->loadModel("User");
         $this->loadModel("Enquete");
         $this->loadModel("Attendance");
@@ -176,6 +176,8 @@ class SoapsController extends AppController
             $edate . " 23:59:59",
         ];
 
+        $conditions["Soap.user_id"] = $members_ids;
+
         $soap_history = $this->Soap->find("all", [
             "conditions" => $conditions,
         ]);
@@ -186,9 +188,28 @@ class SoapsController extends AppController
         }
         $this->set("soap_inputted", $soap_inputted);
 
-        //教材現状
-        $course_list = $this->Course->find("list");
-        $this->set("course_list", $course_list);
+        // 教材現状
+        $users_courses = $this->UsersCourse->find("all", [
+            "fields" => ["User.id", "Course.id", "Course.title"],
+            "conditions" => [
+                "UsersCourse.user_id" => $members_ids,
+                "Course.status" => 1,
+            ],
+            "order" => [
+                "User.username" => "ASC",
+                "Course.category_id" => "ASC",
+                "Course.sort_no" => "ASC",
+            ],
+            "recursive" => 0,
+        ]);
+
+        $users_course_list = [];
+        foreach ($users_courses as $users_course) {
+            $his_user_id = $users_course["User"]["id"];
+            $users_course_id = $users_course["Course"]["id"];
+            $users_course_list["$his_user_id"]["$users_course_id"] = $users_course["Course"]["title"];
+        }
+        $this->set("users_course_list", $users_course_list);
 
         //登録
         if ($this->request->is("post")) {
@@ -242,7 +263,7 @@ class SoapsController extends AppController
 
     public function admin_student_edit($user_id)
     {
-        $this->loadModel("Course");
+        $this->loadModel("UsersCourse");
         $this->loadModel("User");
         $this->loadModel("Enquete");
         $this->loadModel("Attendance");
@@ -354,7 +375,18 @@ class SoapsController extends AppController
         $this->set("group_id", $group_id);
 
         //教材現状
-        $course_list = $this->Course->find("list");
+        $course_list = $this->UsersCourse->find("list", [
+            "fields" => ["Course.id", "Course.title"],
+            "conditions" => [
+                "UsersCourse.user_id" => $user_id,
+                "Course.status" => 1,
+            ],
+            "order" => [
+                "Course.category_id" => "ASC",
+                "Course.sort_no" => "ASC",
+            ],
+            "recursive" => 0,
+        ]);
         $this->set("course_list", $course_list);
 
         //登録
@@ -406,7 +438,7 @@ class SoapsController extends AppController
 
     public function admin_id_edit($soap_id)
     {
-        $this->loadModel("Course");
+        $this->loadModel("UsersCourse");
         $this->loadModel("User");
 
         $edited_soap = $this->Soap->find("first", [
@@ -436,7 +468,18 @@ class SoapsController extends AppController
         $this->set("group_list", $group_list);
 
         //教材現状
-        $course_list = $this->Course->find("list");
+        $course_list = $this->UsersCourse->find("list", [
+            "fields" => ["Course.id", "Course.title"],
+            "conditions" => [
+                "UsersCourse.user_id" => $edited_soap["Soap"]["user_id"],
+                "Course.status" => 1,
+            ],
+            "order" => [
+                "Course.category_id" => "ASC",
+                "Course.sort_no" => "ASC",
+            ],
+            "recursive" => 0,
+        ]);
         $this->set("course_list", $course_list);
 
         //登録
