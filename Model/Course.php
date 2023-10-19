@@ -315,6 +315,11 @@ EOF;
         $taking_courses = $this->UsersCourse->find("all", [
             "conditions" => [
                 "UsersCourse.user_id" => $user_id,
+                "Course.status" => 1,
+            ],
+            "order" => [
+                "Course.category_id" => "ASC",
+                "Course.sort_no" => "ASC",
             ],
         ]);
 
