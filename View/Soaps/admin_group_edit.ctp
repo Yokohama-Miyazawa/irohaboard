@@ -64,7 +64,7 @@
 						'label' => __('現状：'),
 						'div' => false,
 						'class' => 'soap_select',
-						'options' => $course_list,
+						'options' => $users_course_list[$user_id],
 						'empty' => '',
 						'value' => $soap_inputted[$user_id]['current_status'],
 						'style' => ''
