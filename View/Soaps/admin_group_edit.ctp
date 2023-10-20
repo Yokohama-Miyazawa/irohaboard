@@ -1,18 +1,19 @@
 <?php echo $this->element('admin_menu');?>
 <?php echo $this->Html->css('soap');?>
 <?php echo $this->Html->script('custom.js');?>
+<div><?php echo $this->Html->link(__('<< 戻る'), array('action' => 'find_by_group'))?></div>
 <div class = "admin-group_edit-index">
   <?php if (empty($members)): ?>
   <div class = "ib-page-title"><?php echo __('担当受講生がいません。')?></div>
   <?php else: ?>
-  <div class = "ib-page-title"><?php echo __('担当受講生一覧')?></div>
+  <div class = "ib-page-title"><?php echo h($group_list[$group_id])?>&nbsp;<?php echo __('担当受講生一覧')?></div>
   <br><br>
   <?php //$this->log($members);?>
   <?php foreach($members as $member):?>
   <div class = "member-input">
     <?php
 			$user_id = $member['User']['id'];
-			$group_id = $member['User']['group_id'];
+			//$group_id = $member['User']['group_id'];
     ?>
 	<script>
 	  $(function(){
@@ -63,7 +64,7 @@
 						'label' => __('現状：'),
 						'div' => false,
 						'class' => 'soap_select',
-						'options' => $course_list,
+						'options' => $users_course_list[$user_id],
 						'empty' => '',
 						'value' => $soap_inputted[$user_id]['current_status'],
 						'style' => ''
@@ -141,9 +142,26 @@
   	?>
     </div>
 		<div class = "enquete">
-			<div class = "enquete_headline"><?php echo __('今日の感想:');?></div>
-			<?php //$this->log($enquete_inputted[$user_id]['today_impressions']);?>
-			<?php echo h($enquete_inputted[$user_id]['today_impressions']);?>
+			<div class="enquete_headline">アンケート内容</div>
+			<div class="card today_impressions">
+				<div class = "card-header"><?php echo __('今日の感想');?></div>
+				<div class="card-body"><?php echo h($enquete_inputted[$user_id]['today_impressions']);?></div>
+			</div>
+			<div class="card today_goal">
+				<div class = "card-header">
+					<?php
+						$cleared_or_not = $enquete_inputted[$user_id]['today_goal_cleared'] ? "達成できた" : "達成できなかった";
+						echo h('今日の授業のゴール（' . $cleared_or_not .'）');
+					?>
+				</div>
+				<div class="card-body"><?php echo h($enquete_inputted[$user_id]['today_goal']);?></div>
+			</div>
+			<?php if(!$enquete_inputted[$user_id]['today_goal_cleared']){?>
+			<div class="card today_false_reason">
+				<div class="card-header"><?php echo __('今日のゴールが達成できなかった理由');?></div>
+				<div class="card-body"><?php echo h($enquete_inputted[$user_id]['today_false_reason']);?></div>
+			</div>
+			<?php }?>
 		</div>
   </div>
   <?php endforeach;?>

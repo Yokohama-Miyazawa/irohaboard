@@ -41,7 +41,7 @@
         ?>
         <?php if(!is_null($title)){?>
           <tr>
-            <td nowrap><?php echo h($title)?>:&nbsp;<td/>
+            <td nowrap><?php echo h($title)?>&nbsp;<td/>
             <td nowrap><?php echo h($start)?>&nbsp;<td/>
             <td><?php echo '<meter style="min-width: 200px" low="30" high="90" optimum="100" value='.$rate.'>'.round($rate*100).'%</meter>'; ?></td>
             <td><?php echo h(round($rate*100));?>%&nbsp;<td/>

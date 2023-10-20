@@ -330,7 +330,7 @@ class EnqueteController extends AppController
             }
 
             $this->Paginator->settings["conditions"] = $conditions;
-            $this->Paginator->settings["order"] = "Enquete.created desc";
+            $this->Paginator->settings["order"] = "User.username asc";
             $this->Paginator->settings["limit"] = 100;
             $this->Paginator->settings["maxLimit"] = 100;
             $this->Enquete->recursive = 0;
