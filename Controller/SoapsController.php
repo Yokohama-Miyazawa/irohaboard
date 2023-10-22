@@ -231,6 +231,11 @@ class SoapsController extends AppController
                 ) {
                     continue;
                 }
+
+                // 所属グループを更新
+                $this->User->id = $soap["user_id"];
+                $this->User->saveField("group_id", $soap["group_id"]);
+
                 $inputed = $soap["today_date"];
                 $input_date =
                     $inputed["year"] .
@@ -400,7 +405,7 @@ class SoapsController extends AppController
                 "-" .
                 $today_date["day"];
             foreach ($soaps as &$soap) {
-                if (
+                if (  // S・O・A・Pのいずれも書かれていないものは保存しない
                     $soap["S"] == "" &&
                     $soap["O"] == "" &&
                     $soap["A"] == "" &&
@@ -408,6 +413,11 @@ class SoapsController extends AppController
                 ) {
                     continue;
                 }
+
+                // 所属グループを更新
+                $this->User->id = $soap["user_id"];
+                $this->User->saveField("group_id", $soap["group_id"]);
+
                 // SOAP記入日で最後に勉強した教材を取得
                 $inputed = $soap["today_date"];
                 $input_date =
@@ -486,6 +496,11 @@ class SoapsController extends AppController
         if ($this->request->is("post")) {
             $this->loadModel("Record");
             $soap = $this->request->data["Soap"];
+
+            // 所属グループを更新
+            $this->User->id = $soap["user_id"];
+            $this->User->saveField("group_id", $soap["group_id"]);
+
             // SOAP記入日で最後に勉強した教材を取得
             $inputed = $soap["today_date"];
             $input_date = $inputed["year"] . "-" . $inputed["month"] . "-" . $inputed["day"];
@@ -493,6 +508,7 @@ class SoapsController extends AppController
                 $soap["user_id"],
                 $input_date
             );
+
             if ($this->Soap->save($soap)) {
                 $this->Flash->success(__("更新しました、ありがとうございます"));
                 return $this->redirect([

@@ -94,15 +94,12 @@ class EnqueteController extends AppController
         }
         $this->set("previous_next_goal", $previous_next_goal);
 
-        //$entity = $this->Enquete->newEntity($this->request->data);
-
         if ($this->request->is(["post", "put"])) {
             $this->Enquete->set($this->request->data);
-            //もしvalidateに満たさない場合
+            // もしvalidateに満たさない場合
             if (!$this->Enquete->validates()) {
                 $errors = $this->Enquete->validationErrors;
                 foreach ($errors as $error) {
-                    //this->log($error);
                     $this->Session->setFlash($error[0]);
                     return;
                 }
@@ -114,7 +111,9 @@ class EnqueteController extends AppController
                     ] + $this->request->data;
                 $save_data = $request_data;
 
+                // 所属グループを更新
                 $this->User->id = $user_id;
+                $this->User->saveField("group_id", $request_data["group_id"]);
 
                 if ($this->Enquete->save($save_data)) {
                     $this->Flash->success(
