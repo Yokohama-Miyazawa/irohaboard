@@ -35,7 +35,7 @@
 						'class' => '',
 						'required'=> 'required',
 						'options' => $group_list,
-						'empty' => $group_list[$group_id],
+						'empty' => '',
 						'value' => $enquete_inputted['Enquete']['group_id'],
 						'style' => ''
 					));
