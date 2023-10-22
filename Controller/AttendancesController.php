@@ -331,111 +331,25 @@ class AttendancesController extends AppController
 
     public function admin_attendance_status()
     {
-        $this->loadModel("User");
         $this->loadModel("Attendance");
         $this->loadModel("Date");
 
-        $user_list = $this->User->find("all", [
-            "conditions" => [
-                "User.role" => "user",
-            ],
-            "order" => "User.id ASC",
-        ]);
-
         $last_day = $this->Date->getLastClassDate("Y-m-d");
-
         $last_class_date_id = $this->Date->getLastClassId();
 
-        $today = date("Y-m-d");
-        $from_date =
-            date("w") == 0
-                ? $today
-                : date("Y-m-d", strtotime(" last sunday ", strtotime($today)));
-        $to_date = date(
-            "Y-m-d",
-            strtotime(" next saturday ", strtotime($today))
-        );
+        $this->set(compact("last_day", "last_class_date_id"));
 
-        //１限に出席した人のリスト
-        $period_1_attendance_user_list = $this->Attendance->find("all", [
-            "fields" => ["User.id", "User.name"],
-            "conditions" => [
-                "Attendance.date_id" => $last_class_date_id,
-                "Attendance.period" => 0,
-                "Attendance.status" => 1,
-            ],
-            "order" => "Attendance.user_id ASC",
-        ]);
-
-        //1限を欠席した人のリスト
-        $period_1_absence_user_list = $this->Attendance->find("all", [
-            "fields" => ["User.id", "User.name"],
-            "conditions" => [
-                "Attendance.date_id" => $last_class_date_id,
-                "Attendance.period" => 0,
-                "NOT" => ["Attendance.status" => 1],
-            ],
-            "order" => "Attendance.user_id ASC",
-        ]);
-
-        $period_1_attended = [
-            "Member" => implode(array_map(function ($attended) {
-                return $attended["User"]["name"] . "<br>";
-            }, $period_1_attendance_user_list)),
-            "Count" => count($period_1_attendance_user_list),
-        ];
-
-        $period_1_absent = [
-            "Member" => implode(array_map(function ($absent) {
-                return $absent["User"]["name"] . "<br>";
-            }, $period_1_absence_user_list)),
-            "Count" => count($period_1_absence_user_list),
-        ];
+        $period_1_attended = $this->Attendance->findAttendedUsersTheDateThePeriod($last_class_date_id, 0);
+        $period_1_absent = $this->Attendance->findAbsentUsersTheDateThePeriod($last_class_date_id, 0);
 
         $this->set("period_1_submitted", $period_1_attended);
         $this->set("period_1_unsubmitted", $period_1_absent);
 
-
-        //２限に出席した人のリスト
-        $period_2_attendance_user_list = $this->Attendance->find("all", [
-            "fields" => ["User.id", "User.name"],
-            "conditions" => [
-                "Attendance.date_id" => $last_class_date_id,
-                "Attendance.period" => 1,
-                "Attendance.status" => 1,
-            ],
-            "order" => "Attendance.user_id ASC",
-        ]);
-
-        //2限を欠席した人のリスト
-        $period_2_absence_user_list = $this->Attendance->find("all", [
-            "fields" => ["User.id", "User.name"],
-            "conditions" => [
-                "Attendance.date_id" => $last_class_date_id,
-                "Attendance.period" => 1,
-                "NOT" => ["Attendance.status" => 1],
-            ],
-            "order" => "Attendance.user_id ASC",
-        ]);
-
-        $period_2_attended = [
-            "Member" => implode(array_map(function ($attended) {
-                return $attended["User"]["name"] . "<br>";
-            }, $period_2_attendance_user_list)),
-            "Count" => count($period_2_attendance_user_list),
-        ];
-
-        $period_2_absent = [
-            "Member" => implode(array_map(function ($absent) {
-                return $absent["User"]["name"] . "<br>";
-            }, $period_2_absence_user_list)),
-            "Count" => count($period_2_absence_user_list),
-        ];
+        $period_2_attended = $this->Attendance->findAttendedUsersTheDateThePeriod($last_class_date_id, 1);
+        $period_2_absent = $this->Attendance->findAbsentUsersTheDateThePeriod($last_class_date_id, 1);
 
         $this->set("period_2_submitted", $period_2_attended);
         $this->set("period_2_unsubmitted", $period_2_absent);
-
-        $this->set(compact("last_day", "last_class_date_id"));
     }
 }
 ?>

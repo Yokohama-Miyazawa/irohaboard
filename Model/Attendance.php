@@ -292,6 +292,64 @@ class Attendance extends AppModel
         return $standard_ip;
     }
 
+    /**
+     * 授業日と時限を指定し、出席者の氏名一覧と人数を返す
+     */
+    public function findAttendedUsersTheDateThePeriod($date_id, $period)
+    {
+        // 指定した授業日の指定した時限に出席した人のリスト
+        $attendance_user_list = $this->find("all", [
+            "fields" => ["User.id", "User.name"],
+            "conditions" => [
+                "User.role" => "user",
+                "Attendance.date_id" => $date_id,
+                "Attendance.period" => $period,
+                "Attendance.status" => 1,
+            ],
+            "order" => "Attendance.user_id ASC",
+        ]);
+
+        // Memberは氏名を改行タグで連結した文字列
+        // Countは出席者数
+        $attended_user_data = [
+            "Member" => implode(array_map(function ($attended) {
+                return $attended["User"]["name"] . "<br>";
+            }, $attendance_user_list)),
+            "Count" => count($attendance_user_list),
+        ];
+
+        return $attended_user_data;
+    }
+
+    /**
+     * 授業日と時限を指定し、出席者以外の氏名一覧と人数を返す
+     */
+    public function findAbsentUsersTheDateThePeriod($date_id, $period)
+    {
+        // 指定した授業日の指定した時限に出席しなかった人のリスト
+        $absence_user_list = $this->find("all", [
+            "fields" => ["User.id", "User.name"],
+            "conditions" => [
+                "User.role" => "user",
+                "Attendance.date_id" => $date_id,
+                "Attendance.period" => $period,
+                "NOT" => ["Attendance.status" => 1],
+            ],
+            "order" => "Attendance.user_id ASC",
+        ]);
+
+        // Memberは氏名を改行タグで連結した文字列
+        // Countは出席者数
+        $absent_user_data = [
+            "Member" => implode(array_map(function ($absent) {
+                return $absent["User"]["name"] . "<br>";
+            }, $absence_user_list)),
+            "Count" => count($absence_user_list),
+        ];
+
+        return $absent_user_data;
+    }
+
     public function calcLateTime(
         $date_id,
         $login_time,
