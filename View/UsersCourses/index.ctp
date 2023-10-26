@@ -1,5 +1,5 @@
 <?php echo $this->element('menu');?>
-<?php echo $this->Html->css('user_course');?>
+<?php echo $this->Html->css('user_course.css?231026');?>
 <script>
 	function check(){
 		if(document.getElementById("today_goal").value == ""){
