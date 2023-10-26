@@ -190,7 +190,7 @@
 .modal__content {
   background: #fff;
   left: 50%;
-  padding: 40px;
+  padding: 0px;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -203,14 +203,15 @@
   flex-wrap: wrap;
 }
 .tab-label {
-  color: White;
+  color: black;
+  font-size: 20px;
   background: LightGray;
   margin: 0 auto;
   text-align: center;
-  padding: 3px 12px;
+  padding: 0.75em 0px;
   order: -1;
-  width: 45%;
-  height: 2em;
+  width: 50%;
+  height: 3em;
 }
 .tab-content {
   width: 100%;
@@ -218,15 +219,18 @@
 }
 /* アクティブなタブ（出席） */
 .tab-switch:checked+.tab-label#attend-label {
-  background: DeepSkyBlue
+  color: Blue;
+  background: white;
 }
 /* アクティブなタブ（欠席） */
 .tab-switch:checked+.tab-label#absent-label {
-  background: Crimson;
+  color: Crimson;
+  background: white;
 }
 /* アクティブなコンテンツ */
 .tab-switch:checked+.tab-label+.tab-content {
   display: block;
+  padding: 20px;
 }
 /* ラジオボタン非表示 */
 .tab-switch {

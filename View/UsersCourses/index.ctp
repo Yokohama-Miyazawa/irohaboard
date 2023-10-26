@@ -1,9 +1,17 @@
 <?php echo $this->element('menu');?>
 <?php echo $this->Html->css('user_course.css?231026');?>
 <script>
-	function check(){
+	function checkEnquete(){
 		if(document.getElementById("today_goal").value == ""){
 			alert("今日の授業のゴールを書いてください");
+			return false;
+		}else{
+			return true;
+		}
+	}
+	function checkAbsence(){
+		if(document.getElementById("AttendanceReason").value == ""){
+			alert("欠席理由を書いてください");
 			return false;
 		}else{
 			return true;
@@ -13,7 +21,7 @@
 
 <div class="users-courses-index full-view">
 
-	<?php if($have_to_write_today_goal){ ?>
+	<?php if(true/*$have_to_write_today_goal*/){ ?>
 		<div class="modal js-modal">
 			<div class="modal__bg"></div>
 			<div class="modal__content tab-wrap">
@@ -53,7 +61,7 @@
 					));
 					echo "</div>";
 					?>
-					<input type="submit" class="btn btn-info btn-add" value="送信" onclick="return check()">
+					<input type="submit" class="btn btn-info btn-add" value="送信" onclick="return checkEnquete()">
 					<?php echo $this->Form->end(); ?>
 				</div>
 				<input id="TAB-ABSENT" type="radio" name="TAB" class="tab-switch" />
@@ -71,12 +79,9 @@
 					  'class' => '',
 					  'style' => '',
 					));
-					echo $this->Form->submit(__('送信'), array(
-					  'class' => 'btn btn-info btn-info',
-					  'div' => false,
-					));
-					echo $this->Form->end();
 					?>
+					<input type="submit" class="btn btn-info" value="送信" onclick="return checkAbsence()">
+					<?php echo $this->Form->end(); ?>
 				</div>
 			</div>
 		</div>
