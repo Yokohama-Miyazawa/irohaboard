@@ -21,7 +21,7 @@
 
 <div class="users-courses-index full-view">
 
-	<?php if(true/*$have_to_write_today_goal*/){ ?>
+	<?php if($have_to_write_today_goal){ ?>
 		<div class="modal js-modal">
 			<div class="modal__bg"></div>
 			<div class="modal__content tab-wrap">
