@@ -1,16 +1,11 @@
 <?php echo $this->element('menu');?>
 <?php echo $this->Html->css('user_course.css?231026');?>
 <script>
-	function checkEnquete(){
+	function check(){
 		if(document.getElementById("today_goal").value == ""){
 			alert("今日の授業のゴールを書いてください");
 			return false;
-		}else{
-			return true;
-		}
-	}
-	function checkAbsence(){
-		if(document.getElementById("AttendanceReason").value == ""){
+		}else if(document.getElementById("AttendanceReason").value == ""){
 			alert("欠席理由を書いてください");
 			return false;
 		}else{
@@ -61,7 +56,7 @@
 					));
 					echo "</div>";
 					?>
-					<input type="submit" class="btn btn-info btn-add" value="送信" onclick="return checkEnquete()">
+					<input type="submit" class="btn btn-info btn-add" value="送信" onclick="return check()">
 					<?php echo $this->Form->end(); ?>
 				</div>
 				<input id="TAB-ABSENT" type="radio" name="TAB" class="tab-switch" />
@@ -80,7 +75,7 @@
 					  'style' => '',
 					));
 					?>
-					<input type="submit" class="btn btn-info" value="送信" onclick="return checkAbsence()">
+					<input type="submit" class="btn btn-info" value="送信" onclick="return check()">
 					<?php echo $this->Form->end(); ?>
 				</div>
 			</div>
