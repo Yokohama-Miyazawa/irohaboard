@@ -144,43 +144,19 @@ class SoapsController extends AppController
             $his_user_id = $history["Enquete"]["user_id"];
             $enquete_inputted["$his_user_id"] = $history["Enquete"];
         }
-
         $this->set("enquete_inputted", $enquete_inputted);
 
         //入力したSOAPを検索（前回の授業から）
         $conditions = [];
-
-        $today = date("Y-m-d");
-        $fdate =
-            date("w") == 0
-                ? $today
-                : date("Y-m-d", strtotime(" last sunday ", strtotime($today)));
-
-        $lecture_date_info = $this->Date->find("first", [
-            "fields" => ["id", "date"],
-            "conditions" => [
-                "date >= " => $fdate,
-            ],
-            "recursive" => -1,
-        ]);
-
-        $created_day = $lecture_date_info["Date"]["date"];
-
-        $edate = date(
-            "Y-m-d",
-            strtotime(" next saturday ", strtotime($created_day))
-        );
-
-        $conditions["Soap.created BETWEEN ? AND ?"] = [
-            $created_day,
-            $edate . " 23:59:59",
-        ];
-
         $conditions["Soap.user_id"] = $members_ids;
-
+        $conditions["Soap.created BETWEEN ? AND ?"] = [
+            $last_lecture_date,
+            date("Y-m-d H:i:s"),
+        ];
         $soap_history = $this->Soap->find("all", [
             "conditions" => $conditions,
         ]);
+
         $soap_inputted = [];
         foreach ($soap_history as $history) {
             $his_user_id = $history["Soap"]["user_id"];
@@ -314,10 +290,9 @@ class SoapsController extends AppController
             $his_user_id = $history["Enquete"]["user_id"];
             $enquete_inputted["$his_user_id"] = $history["Enquete"];
         }
-
         $this->set("enquete_inputted", $enquete_inputted);
-        //メンバーリスト
 
+        //メンバーリスト
         $user_list = $this->User->find("list");
         $this->set("user_list", $user_list);
 
@@ -339,33 +314,10 @@ class SoapsController extends AppController
         //入力したSOAPを検索（先週の授業から）
         $conditions = [];
         $conditions["Soap.user_id"] = $user_id;
-
-        $today = date("Y-m-d");
-        $fdate =
-            date("w", strtotime($today)) == 0  // 今日は日曜日か
-                ? $today
-                : date("Y-m-d", strtotime(" last sunday ", strtotime($today)));  // 日曜日でないなら直前の日曜日を取得
-
-        $lecture_date_info = $this->Date->find("first", [
-            "fields" => ["id", "date"],
-            "conditions" => [
-                "date >= " => $fdate,
-            ],
-            "recursive" => -1,
-        ]);
-
-        $created_day = $lecture_date_info["Date"]["date"];
-
-        $edate = date(
-            "Y-m-d",
-            strtotime(" next saturday ", strtotime($created_day))
-        );
-
         $conditions["Soap.created BETWEEN ? AND ?"] = [
-            $created_day,
-            $edate . " 23:59:59",
+            $last_lecture_date,
+            date("Y-m-d H:i:s"),
         ];
-
         $soap_history = $this->Soap->find("all", [
             "conditions" => $conditions,
         ]);
@@ -377,6 +329,7 @@ class SoapsController extends AppController
             $group_id = $history["Soap"]["group_id"];
         }
         $this->set("soap_inputted", $soap_inputted);
+
         $this->set("group_id", $group_id);
 
         //教材現状
