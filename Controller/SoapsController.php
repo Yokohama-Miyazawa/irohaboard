@@ -463,13 +463,13 @@ class SoapsController extends AppController
             );
 
             if ($this->Soap->save($soap)) {
-                $this->Flash->success(__("更新しました、ありがとうございます"));
+                $this->Flash->success(__("更新しました。"));
                 return $this->redirect([
                     "controller" => "soaprecords",
                     "action" => "admin_index",
                 ]);
             }
-            $this->Flash->error(__("更新は失敗しました、もう一回やってください。"));
+            $this->Flash->error(__("更新に失敗しました。もう一回やってください。"));
         }
     }
 }

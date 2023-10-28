@@ -183,7 +183,15 @@ function dis_item(obj, className){
 			}
 		?>
 			<tr>
-				<td nowrap><?php echo h(Utils::getYMD($record['Enquete']['created'])); ?>&nbsp;</td>
+				<td nowrap class="ib-col-date">
+					<?php
+						echo $this->Html->link(h(Utils::getYMD($record['Enquete']['created'])),
+							array(
+								'controller' => 'enquete',
+								'action' => 'admin_edit', $record['Enquete']['id']
+						));
+					?>
+				</td>
 				<td nowrap> <?php echo h($record['User']['username']); ?> </td>
 				<td nowrap>
 					<?php
