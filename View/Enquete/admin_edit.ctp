@@ -1,7 +1,7 @@
 <?php echo $this->element('menu');?>
 <?php echo $this->Html->css('enquete');?>
 <div class="enquete-input-header full-view">
-  <h1 class="text-center mb-3"><?php echo __('アンケート'.'('.h($user_info['name']).' '.h(str_replace('-', '/', Utils::getYMD($edited_enquete['created']))) . ' 提出分)'.'編集')?></h1>
+  <h1 class="text-center mb-3"><?php echo __('アンケート編集')?></h1>
   <div class="col-sm-12 col-md-8 rounded shadow-lg mx-auto py-5 mb-5">
   <?php
     echo $this->Form->create("Enquete");
@@ -15,12 +15,27 @@
     echo $this->Form->hidden('next_goal', array('value' => $edited_enquete['next_goal']));
     echo $this->Form->hidden('today_impressions', array('value' => $edited_enquete['today_impressions']));
   ?>
+
+  <div class="form-input-block enquete-data">
+    <div class="user_name">
+      <td><?php echo h($user_info["name"]);?>&nbsp;</td>
+    </div>
+    <div class = "student-photo">
+      <?php
+        $img_src = $this->Image->makeInlineImage(Configure::read('student_img').$user_info["pic_path"]);
+      ?>
+      <img src="<?php echo $img_src; ?>" height="150" alt="<?php echo $pic_path ?>"/>
+    </div>
+  </div>
+
+  <div class="form-input-block enquete-data">
+    授業日：<?php echo h(str_replace('-', '/', Utils::getYMD($edited_enquete['created']))); ?>
+  </div>
+
   <div class="form-input-block enquete-input-group required-input">
   <?php
     echo $this->Form->input('group_id',array(
-      'label' => __('個別指導の担当講師：'),
-      //'before' => '<label class="col col-sm-3 control-label">コンテンツ種別</label>',
-      'after' => '<div class = "text-url-input"></div><span class="status-exp">今日の授業の中で，一番多く指導してくれた講師．</span>',
+      'label' => __('担当講師：'),
     	'div' => false,
     	'class' => '',
       'required'=> 'required',
@@ -32,7 +47,60 @@
   ?>
   </div>
 
-  <input type = "submit" class = "btn btn-primary btn-add" value = "更新">
+  <div class="form-input-block enquete-data">
+    前回に設定したゴールは達成できたか：<?php echo $edited_enquete['before_goal_cleared']? __("はい") : __("いいえ"); ?>
+  </div>
+
+  <?php if(!$edited_enquete['before_goal_cleared']){ ?>
+  <div class="form-input-block enquete-data">
+    <h4>前回に設定したゴールが達成できなかった理由</h4>
+    <p><?php echo h($edited_enquete['before_false_reason']); ?></p>
+  </div>
+  <?php } ?>
+
+  <div class="form-input-block enquete-data">
+    <h4>今日の授業のゴール</h4>
+    <p><?php echo h($edited_enquete['today_goal']); ?></p>
+  </div>
+
+  <div class="form-input-block enquete-data">
+    今日の授業のゴールは達成できたか：<?php echo $edited_enquete['today_goal_cleared']? __("はい") : __("いいえ"); ?>
+  </div>
+
+  <?php if(!$edited_enquete['today_goal_cleared']){ ?>
+  <div class="form-input-block enquete-data">
+    <h4>今日の授業のゴールが達成できなかった理由</h4>
+    <p><?php echo h($edited_enquete['today_false_reason']); ?></p>
+  </div>
+  <?php } ?>
+
+  <div class="form-input-block enquete-data">
+    <h4>次回の授業に来る時までに達成するゴール</h4>
+    <p><?php echo h($edited_enquete['next_goal']); ?></p>
+  </div>
+
+  <div class="form-input-block enquete-data">
+    <h4>感想</h4>
+    <p><?php echo h($edited_enquete['today_impressions']); ?></p>
+  </div>
+
+  <!--<input type = "submit" class = "btn btn-primary btn-add float-left" value = "更新">-->
+  <?php echo $this->Form->submit(__('更新'), Configure::read('form_submit_defaults')); ?>
   <?php echo $this->Form->end(); ?>
+
+  <?php
+    echo $this->Form->postLink(__('削除'),
+      array(
+				'action' => 'delete',
+				$edited_enquete['id'],
+			),
+      array(
+        'class' => 'btn btn-danger btn-delete float-right',
+        'style' => 'margin-right: 10px; font-size: 110%;',
+      ),
+      'このアンケートを削除してもよろしいですか?'
+    );
+  ?>
+
   </div>
 </div>

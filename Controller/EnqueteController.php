@@ -557,5 +557,31 @@ class EnqueteController extends AppController
             $this->Flash->error(__("更新に失敗しました。もう一回やってください。"));
         }
     }
+
+    /**
+     * アンケートの削除
+     *
+     * @param int $enqueteid 削除するアンケートのID
+     */
+    public function admin_delete($enquete_id = null)
+    {
+        if (Configure::read("demo_mode")) {
+            return;
+        }
+
+        $this->Enquete->id = $enquete_id;
+        if (!$this->Enquete->exists()) {
+            throw new NotFoundException(__("Invalid Emnquete Data"));
+        }
+        $this->request->allowMethod("post", "delete");
+        if ($this->Enquete->delete()) {
+            $this->Flash->success(__("アンケートが削除されました"));
+        } else {
+            $this->Flash->error(__("アンケートを削除できませんでした"));
+        }
+        return $this->redirect([
+            "action" => "index",
+        ]);
+    }
 }
 ?>

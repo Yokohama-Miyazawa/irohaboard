@@ -101,3 +101,7 @@ input[type="radio"] + label {
   max-width: 45em;
   min-width: 35em;
 }
+
+.enquete-data {
+  font-size: 20px;
+}
