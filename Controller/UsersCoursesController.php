@@ -269,6 +269,15 @@ class UsersCoursesController extends AppController
             );
             $this->set("have_to_write_today_goal", $have_to_write_today_goal);
 
+            $today_attendance_id = $this->Attendance->find("first", [
+                "fields" => ["Attendance.id"],
+                "conditions" => [
+                    "Attendance.user_id" => $user_id,
+                    "Date.date" => date("Y-m-d"),
+                ],
+            ])["Attendance"]["id"];
+            $this->set("today_attendance_id", $today_attendance_id);
+
             //グループリストを生成(公開状態のグループのみ)
             $group_list = $this->Group->find("list", [
                 "conditions" => [

@@ -428,9 +428,9 @@ class Attendance extends AppModel
             "recursive" => -1,
         ]);
         $save_info = $today_attendance_info["Attendance"];
-        if ($save_info["status"] == 1) {
+        if ($save_info["status"] == 0 || $save_info["status"] == 1) {  // 出席済もしくは欠席の連絡済
             return null;
-        } // すでに出席済み
+        }
 
         $is_online_class = $this->Date->isOnlineClass();
         if ($is_online_class) {
