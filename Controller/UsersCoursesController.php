@@ -102,6 +102,10 @@ class UsersCoursesController extends AppController
                 "fields" => [
                     "Course.category_id", "Course.id", "Course.title", "Course.introduction", "Course.before_course",
                 ],
+                "order" => [
+                    "Course.category_id" => "ASC",
+                    "Course.sort_no" => "ASC",
+                ],
                 "recursive" => -1,
             ]);
 
@@ -161,6 +165,10 @@ class UsersCoursesController extends AppController
                 "conditions" => [
                     "UsersCourse.user_id" => $user_id,
                     "Course.status" => 1,
+                ],
+                "order" => [
+                    "Course.category_id" => "ASC",
+                    "Course.sort_no" => "ASC",
                 ],
             ]);
 
