@@ -84,19 +84,24 @@
     <p><?php echo h($edited_enquete['today_impressions']); ?></p>
   </div>
 
-  <!--<input type = "submit" class = "btn btn-primary btn-add float-left" value = "更新">-->
-  <?php echo $this->Form->submit(__('更新'), Configure::read('form_submit_defaults')); ?>
-  <?php echo $this->Form->end(); ?>
-
   <?php
+    echo $this->Form->submit(__('更新'),
+      array(
+        "div" => false,
+        "class" => "btn btn-primary",
+        'style' => 'margin-left: 20px;',
+      )
+    );
+    echo $this->Form->end();
+
     echo $this->Form->postLink(__('削除'),
       array(
 				'action' => 'delete',
 				$edited_enquete['id'],
 			),
       array(
-        'class' => 'btn btn-danger btn-delete float-right',
-        'style' => 'margin-right: 10px; font-size: 110%;',
+        'class' => 'btn btn-danger btn-delete',
+        'style' => 'margin-left: 20px; margin-top: 20px; font-size: 110%;',
       ),
       'このアンケートを削除してもよろしいですか?'
     );
