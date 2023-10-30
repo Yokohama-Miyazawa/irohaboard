@@ -561,7 +561,7 @@ class EnqueteController extends AppController
     /**
      * アンケートの削除
      *
-     * @param int $enqueteid 削除するアンケートのID
+     * @param int $enquete_id 削除するアンケートのID
      */
     public function admin_delete($enquete_id = null)
     {

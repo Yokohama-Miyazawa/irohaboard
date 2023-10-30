@@ -399,6 +399,10 @@ class SoapsController extends AppController
         }
     }
 
+    /**
+     * @param int $soap_id SOAPのID
+     * 一度作成したSOAPを編集する
+     */
     public function admin_id_edit($soap_id)
     {
         $this->loadModel("UsersCourse");
@@ -471,6 +475,33 @@ class SoapsController extends AppController
             }
             $this->Flash->error(__("更新に失敗しました。もう一回やってください。"));
         }
+    }
+
+    /**
+     * SOAPの削除
+     *
+     * @param int $soap_id 削除するSOAPのID
+     */
+    public function admin_delete($soap_id = null)
+    {
+        if (Configure::read("demo_mode")) {
+            return;
+        }
+
+        $this->Soap->id = $soap_id;
+        if (!$this->Soap->exists()) {
+            throw new NotFoundException(__("Invalid SOAP Data"));
+        }
+        $this->request->allowMethod("post", "delete");
+        if ($this->Soap->delete()) {
+            $this->Flash->success(__("SOAPが削除されました"));
+        } else {
+            $this->Flash->error(__("SOAPを削除できませんでした"));
+        }
+        return $this->redirect([
+            "controller" => "soaprecords",
+            "action" => "index",
+        ]);
     }
 }
 
