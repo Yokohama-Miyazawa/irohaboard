@@ -203,8 +203,55 @@ class Attendance extends AppModel
         return $data;
     }
 
-    // user_idと過去8回分出欠席の配列を作る
-    public function findAllUserAttendances()
+    /**
+     * 最後の授業までの出欠記録を取得
+     * @param int $user_id ユーザID
+     * @param int $limit データの個数
+     */
+    public function findAttendancesUntilLastLecture($user_id, $limit=8)
+    {
+        $today = date("Y-m-d");
+        $data = $this->find("all", [
+            "conditions" => [
+                "Attendance.user_id" => $user_id,
+                "Date.date < ?" => $today . " 23:59:59",
+            ],
+            "order" => [
+                "Date.date" => "DESC",
+            ],
+            "limit" => $limit,
+            "recursive" => 0,
+        ]);
+        return $data;
+    }
+
+    /**
+     * 次回の授業から先の出欠記録を取得
+     * @param int $user_id ユーザID
+     * @param int $limit データの個数
+     */
+    public function findAttendancesFromNextLecture($user_id, $limit=8)
+    {
+        $tomorrow = date("Y-m-d", strtotime("+1 days"));
+        $data = $this->find("all", [
+            "conditions" => [
+                "Attendance.user_id" => $user_id,
+                "Date.date >= ?" => $tomorrow,
+            ],
+            "order" => [
+                "Date.date" => "ASC",
+            ],
+            "limit" => $limit,
+            "recursive" => 0,
+        ]);
+        return array_reverse($data);
+    }
+
+    /**
+     * user_idと過去の出欠席で構成された配列を作る
+     * @param int $limit データの個数
+     */
+    public function findAllUserAttendances($limit=6)
     {
         $user_list = $this->User->find("all", [
             "conditions" => [
@@ -216,8 +263,30 @@ class Attendance extends AppModel
         $attendance_list = [];
         foreach ($user_list as $user) {
             $user_id = $user["User"]["id"];
-            $recent_attendance = $this->findRecentAttendances($user_id);
+            $recent_attendance = $this->findAttendancesUntilLastLecture($user_id, $limit);
             $attendance_list += [$user_id => $recent_attendance];
+        }
+        return $attendance_list;
+    }
+
+    /**
+     * user_idと次回以降の出欠席で構成された配列を作る
+     * @param int $limit データの個数
+     */
+    public function findAllUserFutureAttendances($limit=6)
+    {
+        $user_list = $this->User->find("all", [
+            "conditions" => [
+                "User.role" => "user",
+            ],
+            "order" => "User.id ASC",
+            "recursive" => -1,
+        ]);
+        $attendance_list = [];
+        foreach ($user_list as $user) {
+            $user_id = $user["User"]["id"];
+            $future_attendance = $this->findAttendancesFromNextLecture($user_id, $limit);
+            $attendance_list += [$user_id => $future_attendance];
         }
         return $attendance_list;
     }

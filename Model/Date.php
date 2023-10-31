@@ -138,6 +138,11 @@ class Date extends AppModel
         return $last_class_date;
     }
 
+    /**
+     * 今日までの授業日一覧を取得
+     * @param int $format_str  日付のフォーマット
+     * @param int $limit  データの個数
+     */
     public function getDateListUntilToday($format_str = "Y-m-d", $limit = 8)
     {
         $date_list = [];
@@ -150,6 +155,30 @@ class Date extends AppModel
             "recursive" => -1,
         ]);
         foreach ($data as $datum) {
+            $date_list[] = (new DateTime($datum["Date"]["date"]))->format(
+                $format_str
+            );
+        }
+        return $date_list;
+    }
+
+    /**
+     * 明日以降の授業日一覧を取得
+     * @param int $format_str  日付のフォーマット
+     * @param int $limit  データの個数
+     */
+    public function getDateListFromTomorrow($format_str = "Y-m-d", $limit = 8)
+    {
+        $date_list = [];
+        $tomorrow = date("Y-m-d", strtotime("+1 days"));
+        $data = $this->find("all", [
+            "fields" => ["date"],
+            "conditions" => ["date >= ?" => $tomorrow],
+            "order" => "date ASC",
+            "limit" => $limit,
+            "recursive" => -1,
+        ]);
+        foreach (array_reverse($data) as $datum) {
             $date_list[] = (new DateTime($datum["Date"]["date"]))->format(
                 $format_str
             );
