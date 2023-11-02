@@ -505,5 +505,83 @@ class EnqueteController extends AppController
 
         $this->set(compact("last_day", "last_class_date_id"));
     }
+
+    /**
+     * @param int $enquete_id アンケートのID
+     * 受講生が提出したアンケートを講師が編集する
+     */
+    public function admin_edit($enquete_id)
+    {
+        $this->loadModel("User");
+
+        $edited_enquete = $this->Enquete->find("first", [
+            "fields" => [
+                "Enquete.id", "Enquete.user_id", "Enquete.group_id",
+                "Enquete.before_goal_cleared", "Enquete.before_false_reason",
+                "Enquete.today_goal", "Enquete.today_goal_cleared", "Enquete.today_false_reason",
+                "Enquete.next_goal", "Enquete.today_impressions", "Enquete.created",
+                "User.name", "User.pic_path",
+                "Group.title",
+            ],
+            "conditions" => [
+                "Enquete.id" => $enquete_id,
+            ],
+        ]);
+        $this->set("edited_enquete", $edited_enquete["Enquete"]);
+        $this->set("user_info", $edited_enquete["User"]);
+        $this->set("gruup_info", $edited_enquete["Group"]);
+
+        // 公開状態のグループ一覧を作り，配列の形を整形する
+        $group_list = $this->Group->find("list", [
+            "conditions" => [
+                "status" => 1,
+            ],
+        ]);
+        $this->set("group_list", $group_list);
+
+        // 更新
+        if ($this->request->is("post")) {
+            $enquete = $this->request->data["Enquete"];
+
+            // 所属グループを更新
+            $this->User->id = $enquete["user_id"];
+            $this->User->saveField("group_id", $enquete["group_id"]);
+
+            if ($this->Enquete->save($enquete)) {
+                $this->Flash->success(__("更新しました。"));
+                return $this->redirect([
+                    "controller" => "enquete",
+                    "action" => "admin_index",
+                ]);
+            }
+            $this->Flash->error(__("更新に失敗しました。もう一回やってください。"));
+        }
+    }
+
+    /**
+     * アンケートの削除
+     *
+     * @param int $enquete_id 削除するアンケートのID
+     */
+    public function admin_delete($enquete_id = null)
+    {
+        if (Configure::read("demo_mode")) {
+            return;
+        }
+
+        $this->Enquete->id = $enquete_id;
+        if (!$this->Enquete->exists()) {
+            throw new NotFoundException(__("Invalid Emnquete Data"));
+        }
+        $this->request->allowMethod("post", "delete");
+        if ($this->Enquete->delete()) {
+            $this->Flash->success(__("アンケートが削除されました"));
+        } else {
+            $this->Flash->error(__("アンケートを削除できませんでした"));
+        }
+        return $this->redirect([
+            "action" => "index",
+        ]);
+    }
 }
 ?>

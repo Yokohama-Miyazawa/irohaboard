@@ -133,7 +133,21 @@ $(function(){
 			<?php //echo h($enquete_inputted[$user_id]['today_impressions']);?>
 		</div>-->
   </div>
-  <div class = "under_element"></div>
+  <!--<div class = "under_element"></div>-->
   <input type = "submit" class = "btn btn-info btn-add pull-right" value = "更新">
   <?php echo $this->Form->end(); ?>
+  <br>
+  <?php
+    echo $this->Form->postLink(__('削除'),
+      array(
+        'action' => 'delete',
+        $edited_soap['id'],
+      ),
+      array(
+        'class' => 'btn btn-danger btn-delete',
+        'style' => 'margin-top:20px; font-size: 110%;',
+      ),
+      'このSOAPを削除してもよろしいですか?'
+    );
+  ?>
 </div>
