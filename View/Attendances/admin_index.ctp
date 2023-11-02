@@ -19,24 +19,68 @@ function downloadCSV()
 }
 </script>
 <?php $this->end(); ?>
+<?php
+function getAttendanceIcon($attendance_datum, $is_future=false)
+{
+	switch($attendance_datum['status']){
+		case 0:  // 欠席
+			$color = 'red';
+			$mark  = '×';
+			break;
+		case 1:  // 出席済
+			if($attendance_datum['late_time'] != 0){
+				$late_time = $attendance_datum['late_time'];
+				$color = 'green';
+				$mark  = '△'."($late_time)";
+			}else{
+				$color = 'blue';
+				$mark  = '○';
+			}
+			break;
+		case 2:  // 未定
+			if($is_future){
+				$color = 'blue';
+				$mark  = '-';				
+			}else{
+				$color = 'orange';
+				$mark  = '?';
+			}
+			break;
+		case 3:  // 遅刻予定
+			$color = 'green';
+			$mark  = '△';
+			break;
+		case 4:  // 早退予定
+			$color = 'blue';
+			$mark  = '○(!)';
+			break;
+	}
+	return [
+		"mark" => $mark,
+		"color" => $color,
+	];
+}
+?>
 <div class="admin-records-index full-view">
 	<div class="ib-page-title"><?php echo __('出欠席'); ?></div><br/><br/>
 
+	<!-- 1限の出欠情報 -->
 	<div class = "ib-row">
 	  <span style = "margin-right : 20px" ><?php echo "受講日：".$last_day;?></span>
-		<span style = "margin-right : 20px" ><?php echo "１限：".$cnt_1."名";?></span>
+		<span style = "margin-right : 20px" id="1st"><?php echo "１限：".$cnt_1."名";?></span>
 		<span style = "margin-right : 20px" ><?php echo "出席：".$att_1."名";?></span>
 		<span style = "margin-right : 20px" ><?php echo "欠席：".$abs_1."名";?></span>
 		<span style = "margin-right : 20px" ><?php echo "出席率：".round(($att_1 / $cnt_1) * 100)."%";?></span>
 	</div>
 
-	<?php //１限のリスト ?>
+	<!-- 1限の出欠表 -->
 	<div class = "record-table" style = "margin-bottom : 20px">
 	<table cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
-				<th nowrap ><?php echo __('No.');?></th>
-				<th nowrap class="non-last-column ib-col-center"><?php echo __('受講生番号');?></th>
+				<?php foreach($future_date_list as $date){ echo '<th nowrap class="ib-col-center non-last-column">'.h($date).'</th>'; } ?>
+				<th nowrap class="ib-col-center number-column"><?php echo __('No.');?></th>
+				<th nowrap class="non-last-column ib-col-center student-number-column"><?php echo __('受講生番号');?></th>
 				<th nowrap class="non-last-column"><?php echo __('氏名(学年)');?></th>
 			<?php
 				$no = 0;
@@ -44,9 +88,9 @@ function downloadCSV()
 				foreach($date_list as $date){
 					// 最後の要素
 					if(++$no == $length){
-						echo '<th nowrap class="last-column">'.h($date).'</th>';
+						echo '<th nowrap class="ib-col-center last-column">'.h($date).'</th>';
 					}else{
-						echo '<th nowrap class="non-last-column">'.h($date).'</th>';
+						echo '<th nowrap class="ib-col-center non-last-column">'.h($date).'</th>';
 					}
 				}
 			?>
@@ -57,6 +101,7 @@ function downloadCSV()
 		$tmp_cnt = 1;
 		foreach ($period1_members as $member):
 			$user_id = $member['id'];
+			$future_attendance_info = $future_attendance_list[$user_id];
 			$attendance_info = $attendance_list[$user_id];
 			$img_src = $this->Html->url(array(
 				"controller" => "users",
@@ -65,54 +110,45 @@ function downloadCSV()
 			), false);
 		?>
 			<tr>
-				<td><?php echo h($tmp_cnt++);?></td>
-				<td nowrap class="ib-col-center"><?php echo h($member['username']); ?>&nbsp;</td>
-				<td nowrap>
+				<?php
+					foreach ($future_attendance_info as $row):
+						$attendance_icon = getAttendanceIcon($row['Attendance'], true);
+				?>
+				<td nowrap class="ib-col-center"><span style = "font-size : 15pt">
+					<?php
+						$attendance_id = $row['Attendance']['id'];
+						echo $this->Html->link(__($attendance_icon['mark']),
+							array(
+								'controller' => 'attendances',
+								'action' => 'admin_edit', $user_id, $attendance_id
+							),
+							array(
+								'style' => 'color:'.$attendance_icon['color'].';'
+						));
+					?>
+				</span></td>
+				<?php endforeach; ?>
+				<td class="ib-col-center"><?php echo h($tmp_cnt++);?></td>
+				<td nowrap class="ib-col-center number-column"><?php echo h($member['username']); ?>&nbsp;</td>
+				<td nowrap class="student-number-column">
 					<span data-toggle="tooltip" title='<img src="<?php echo $img_src; ?>" height="150" alt="<?php echo $member['name']; ?>"/>'>
 						<?php echo h($member['name']); ?>(<?php echo h($member['grade']); ?>)&nbsp;
 					</span>
 				</td>
 				<?php
 					foreach ($attendance_info as $row):
-						switch($row['Attendance']['status']):
-							case 0:  // 欠席
-								$color = 'red';
-								$mark  = '×';
-								break;
-							case 1:  // 出席済
-								if($row['Attendance']['late_time'] != 0){
-									$late_time = $row['Attendance']['late_time'];
-									$color = 'green';
-									$mark  = '△'."($late_time)";
-								}else{
-									$color = 'blue';
-									$mark  = '○';
-								}
-								break;
-							case 2:  // 未定
-								$color = 'orange';
-								$mark  = '?';
-								break;
-							case 3:  // 遅刻予定
-								$color = 'green';
-								$mark  = '△';
-								break;
-							case 4:  // 早退予定
-								$color = 'blue';
-								$mark  = '○(!)';
-								break;
-						endswitch;
+						$attendance_icon = getAttendanceIcon($row['Attendance']);
 				?>
-				<td nowrap><span style = "font-size : 15pt">
+				<td nowrap class="ib-col-center"><span style = "font-size : 15pt">
 					<?php
 						$attendance_id = $row['Attendance']['id'];
-						echo $this->Html->link(__($mark),
+						echo $this->Html->link(__($attendance_icon['mark']),
 							array(
 								'controller' => 'attendances',
 								'action' => 'admin_edit', $user_id, $attendance_id
 							),
 							array(
-								'style' => 'color:'.$color.';'
+								'style' => 'color:'.$attendance_icon['color'].';'
 						));
 					?>
 				</span></td>
@@ -129,22 +165,23 @@ function downloadCSV()
 	</table>
 	</div>
 
-
+	<!-- 2限の出欠情報 -->
 	<div class = "ib-row" style = "margin-bottom : 10px">
 	  <span style = "margin-right : 20px" ><?php echo "受講日：".$last_day;?></span>
-		<span style = "margin-right : 20px" ><?php echo "２限：".$cnt_2."名";?></span>
+		<span style = "margin-right : 20px" id="2nd"><?php echo "２限：".$cnt_2."名";?></span>
 		<span style = "margin-right : 20px" ><?php echo "出席：".$att_2."名";?></span>
 		<span style = "margin-right : 20px" ><?php echo "欠席：".$abs_2."名";?></span>
 		<span style = "margin-right : 20px" ><?php echo "出席率：".round(($att_2 / $cnt_2) * 100)."%";?></span>
 	</div>
 
-	<?php //２限のリスト?>
+	<!-- 2限の出欠表 -->
 	<div class = "record-table" style = "margin-top : 30px">
 	<table cellpadding="0" cellspacing="0">
 		<thead>
 			<tr>
-				<th nowrap ><?php echo __('No.');?></th>
-				<th nowrap class="non-last-column ib-col-center"><?php echo __('受講生番号');?></th>
+				<?php foreach($future_date_list as $date){ echo '<th nowrap class="ib-col-center non-last-column">'.h($date).'</th>'; } ?>
+				<th nowrap class="ib-col-center number-column"><?php echo __('No.');?></th>
+				<th nowrap class="non-last-column ib-col-center student-number-column"><?php echo __('受講生番号');?></th>
 				<th nowrap class="non-last-column"><?php echo __('氏名');?></th>
 			<?php
 				$no = 0;
@@ -152,9 +189,9 @@ function downloadCSV()
 				foreach($date_list as $date){
 					// 最後の要素
 					if(++$no == $length){
-						echo '<th nowrap class="last-column">'.h($date).'</th>';
+						echo '<th nowrap class="ib-col-center last-column">'.h($date).'</th>';
 					}else{
-						echo '<th nowrap class="non-last-column">'.h($date).'</th>';
+						echo '<th nowrap class="ib-col-center non-last-column">'.h($date).'</th>';
 					}
 				}
 			?>
@@ -165,6 +202,7 @@ function downloadCSV()
 		$tmp_cnt = 1;
 		foreach ($period2_members as $member):
 			$user_id = $member['id'];
+			$future_attendance_info = $future_attendance_list[$user_id];
 			$attendance_info = $attendance_list[$user_id];
 			$img_src = $this->Html->url(array(
 				"controller" => "users",
@@ -173,54 +211,45 @@ function downloadCSV()
 			), false);
 		?>
 			<tr>
-				<td><?php echo h($tmp_cnt++);?></td>
-				<td nowrap class="ib-col-center"><?php echo h($member['username']); ?>&nbsp;</td>
-				<td nowrap>
+				<?php
+					foreach ($future_attendance_info as $row):
+						$attendance_icon = getAttendanceIcon($row['Attendance'], true);
+				?>
+				<td nowrap class="ib-col-center"><span style = "font-size : 15pt">
+					<?php
+						$attendance_id = $row['Attendance']['id'];
+						echo $this->Html->link(__($attendance_icon['mark']),
+							array(
+								'controller' => 'attendances',
+								'action' => 'admin_edit', $user_id, $attendance_id
+							),
+							array(
+								'style' => 'color:'.$attendance_icon['color'].';'
+						));
+					?>
+				</span></td>
+				<?php endforeach; ?>
+				<td class="ib-col-center"><?php echo h($tmp_cnt++);?></td>
+				<td nowrap class="ib-col-center number-column"><?php echo h($member['username']); ?>&nbsp;</td>
+				<td nowrap class="student-number-column">
 					<span data-toggle="tooltip" title='<img src="<?php echo $img_src; ?>" height="150" alt="<?php echo $member['name']; ?>"/>'>
 						<?php echo h($member['name']); ?>(<?php echo h($member['grade']); ?>)&nbsp;
 					</span>
 				</td>
 				<?php
 					foreach ($attendance_info as $row):
-						switch($row['Attendance']['status']):
-							case 0:  // 欠席
-								$color = 'red';
-								$mark  = '×';
-								break;
-							case 1:  // 出席済
-								if($row['Attendance']['late_time'] != 0){
-									$late_time = $row['Attendance']['late_time'];
-									$color = 'green';
-									$mark  = '△'."($late_time)";
-								}else{
-									$color = 'blue';
-									$mark  = '○';
-								}
-								break;
-							case 2:  // 未定
-								$color = 'orange';
-								$mark  = '?';
-								break;
-							case 3:  // 遅刻予定
-								$color = 'green';
-								$mark  = '△';
-								break;
-							case 4:  // 早退予定
-								$color = 'orange';
-								$mark  = '?(!)';
-								break;
-						endswitch;
+						$attendance_icon = getAttendanceIcon($row['Attendance']);
 				?>
-				<td nowrap><span style = "font-size : 15pt">
+				<td nowrap class="ib-col-center"><span style = "font-size : 15pt">
 					<?php
 						$attendance_id = $row['Attendance']['id'];
-						echo $this->Html->link(__($mark),
+						echo $this->Html->link(__($attendance_icon['mark']),
 							array(
 								'controller' => 'attendances',
 								'action' => 'admin_edit', $user_id, $attendance_id
 							),
 							array(
-								'style' => 'color:'.$color.';'
+								'style' => 'color:'.$attendance_icon['color'].';'
 						));
 					?>
 				</span></td>
@@ -236,4 +265,5 @@ function downloadCSV()
 		</tbody>
 	</table>
 	</div>
+
 </div>

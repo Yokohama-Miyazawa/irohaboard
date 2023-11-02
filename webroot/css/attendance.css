@@ -95,9 +95,17 @@ input[type="radio"] + label {
 }
 
 .non-last-column {
-  width: 10%;
+  max-width: 10%;
 }
 
 .last-column {
   width: auto;
+}
+
+.number-column {
+  width: 2.1em;
+}
+
+.student-number-column {
+  width: 9em;
 }

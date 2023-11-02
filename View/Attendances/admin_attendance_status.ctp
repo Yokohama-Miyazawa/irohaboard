@@ -80,7 +80,7 @@
       </div>
     </div>
     <div class="col">
-      <div class="card" id="chart" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
+      <div class="card" id="chart" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
         <div class="card-body" id="chart-body">
           <div class="pie-chart" id="period2Chart"></div>
           <div class="labelOverlay">

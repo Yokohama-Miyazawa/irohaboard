@@ -186,9 +186,15 @@ class AttendancesController extends AppController
         $period2_members = $this->User->findAllUserInfoInPeriod(1);
         $this->set(compact("period1_members", "period2_members"));
 
-        $attendance_list = $this->Attendance->findAllUserAttendances();
+        $attendance_list = $this->Attendance->findAllUserAttendances(6);
+        $date_list = $this->Date->getDateListUntilToday("m月d日", 6);
+        $this->set("attendance_list", $attendance_list);
+        $this->set("date_list", $date_list);
 
-        $date_list = $this->Date->getDateListUntilNextLecture("m月d日");
+        $future_attendance_list = $this->Attendance->findAllUserFutureAttendances(6);
+        $future_date_list = $this->Date->getDateListFromTomorrow("m月d日", 6);
+        $this->set("future_attendance_list", $future_attendance_list);
+        $this->set("future_date_list", $future_date_list);
 
         $last_day = $this->Date->getLastClassDate("Y-m-d");
 
@@ -233,9 +239,6 @@ class AttendancesController extends AppController
                 "last_day"
             )
         );
-
-        $this->set("attendance_list", $attendance_list);
-        $this->set("date_list", $date_list);
     }
 
     public function admin_edit($user_id, $attendance_id)
