@@ -19,6 +19,27 @@ class SoapsController extends AppController
 {
     public $helpers = ["Html", "Form"];
 
+    public $components = ["Security"];
+
+
+    public function beforeFilter() {
+        $this->Security->blackHoleCallback = 'blackhole';
+        parent::beforeFilter();
+    }
+
+    public function blackhole($type) {
+        switch($type){
+            case 'csrf':
+                $this->Flash->error(__("CSRFエラーです。"));
+                $this->redirect(["action" => "index"]);
+                break;
+            default:
+                $this->Flash->error(__("保存に失敗しました。フォーム送信後のブラウザバックはおやめください。"));
+                $this->redirect(["action" => "index"]);
+                break;
+        }
+    }
+
     public function admin_index()
     {
     }
@@ -45,10 +66,11 @@ class SoapsController extends AppController
         }
         $this->set("user_list", $user_list);
     }
-    /*
-    @param int $group_id グループID
-    グループでSOAPを記入する
-  */
+
+    /**
+     * @param int $group_id グループID
+     * グループでSOAPを記入する
+     */
     public function admin_group_edit($group_id)
     {
         $this->loadModel("UsersCourse");
@@ -188,7 +210,7 @@ class SoapsController extends AppController
         $this->set("users_course_list", $users_course_list);
 
         //登録
-        if ($this->request->is("post")) {
+        if ($this->request->is(["post", "put"])) {
             $soaps = $this->request->data;
 
             $created =
@@ -242,6 +264,10 @@ class SoapsController extends AppController
         }
     }
 
+    /**
+     * @param int $user_id ユーザID
+     * 個人単位でSOAPを記入する
+    */
     public function admin_student_edit($user_id)
     {
         $this->loadModel("UsersCourse");
@@ -348,7 +374,7 @@ class SoapsController extends AppController
         $this->set("course_list", $course_list);
 
         //登録
-        if ($this->request->is("post")) {
+        if ($this->request->is(["post", "put"])) {
             $this->loadModel("Record");
             $soaps = $this->request->data;
             $created =
@@ -450,7 +476,7 @@ class SoapsController extends AppController
         $this->set("course_list", $course_list);
 
         //登録
-        if ($this->request->is("post")) {
+        if ($this->request->is(["post", "put"])) {
             $this->loadModel("Record");
             $soap = $this->request->data["Soap"];
 
@@ -479,7 +505,6 @@ class SoapsController extends AppController
 
     /**
      * SOAPの削除
-     *
      * @param int $soap_id 削除するSOAPのID
      */
     public function admin_delete($soap_id = null)
