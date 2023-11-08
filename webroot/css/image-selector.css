@@ -1,0 +1,66 @@
+@charset "utf-8";
+.ImageSelector{
+  display: inline-flex;
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid #777;
+  background-color: #fff;
+  cursor: pointer;
+}
+.ImageSelector__display,.ImageSelector__preview,.ImageSelector__preview-child{
+  display: flex;
+  align-items: center;
+}
+.ImageSelector__preview,.ImageSelector__option{
+  padding: 4px;
+}
+.ImageSelector__option{
+  display: inline-flex;
+  background-color: #fff;
+}
+.ImageSelector__option:hover{
+  background-color: #3498DB;
+  color: #fff;
+}
+.ImageSelector__icon{
+  width: 20px;
+  position: relative;
+}
+.ImageSelector__icon::before,.ImageSelector__icon::after{
+  content: "";
+  width: 50%;
+  height: 4px;
+  position: absolute;
+  top: 55%;
+  background-color: #555;
+}
+.ImageSelector__icon::before{
+  left: 0;
+  transform-origin: bottom right;
+  transform: translate(0,-50%) rotate(45deg);
+}
+.ImageSelector__icon::after{
+  left: 50%;
+  transform-origin: bottom left;
+  transform: translate(0,-50%) rotate(-45deg);
+}
+.ImageSelector__pulldown{
+  display: none;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-height: 300px;
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  z-index: 10;
+  border: 1px solid #777;
+  background-color: #fff;
+  overflow-y: auto;
+}
+.ImageSelector__s-spread{
+  display: flex;
+}
+
+.group-leader-face{
+  width: 5em;
+}
