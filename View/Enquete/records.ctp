@@ -10,7 +10,7 @@
 		<thead>
 			<tr>
 				<th nowrap　class="ib-col-center"><?php echo $this->Paginator->sort('Enquete.created','受講日')?>
-				<th nowrap><?php echo $this->Paginator->sort('Enquete.group_id', '担当講師'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('Enquete.group_id', '担当講師/TA'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('Enquete.today_impressions', '今日の感想'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('Enquete.before_goal_cleared', '前回ゴールT/F'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('Enquete.before_false_reason', '前回ゴールF理由'); ?></th>

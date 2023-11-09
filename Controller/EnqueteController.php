@@ -75,13 +75,30 @@ class EnqueteController extends AppController
 
         $this->set("enquete_inputted", $enquete_inputted);
 
-        //グループリストを生成(公開状態のグループのみ)
-        $group_list = $this->Group->find("list", [
+        //グループと、グループリーダー講師の顔写真リストを生成(公開状態のグループのみ)
+        $group_data = $this->Group->find("all", [
+            "fields" => ["id", "title", "User.pic_path"],
             "conditions" => [
                 "status" => 1,
             ],
+            "joins" => [[
+                "table" => "ib_users",
+                "alias" => "User",
+                "type" => "LEFT",
+                "conditions" => [
+                    "User.id = Group.leader_id",
+                ],
+            ]],
+            "recursive" => -1,
         ]);
-        $this->set("group_list", $group_list);
+        $group_leaders = array_map(function($e){
+            return [
+                "id" => $e["Group"]["id"],
+                "title" => $e["Group"]["title"],
+                "pic_path" => $e["User"]["pic_path"],
+            ];
+        }, $group_data);
+        $this->set("group_leaders", $group_leaders);
 
         //今所属するグループのidを探す．
         $group_id = $this->User->findUserGroup($user_id);
