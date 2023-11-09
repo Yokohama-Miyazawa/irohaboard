@@ -264,7 +264,7 @@ class UsersCoursesController extends AppController
 
         // role == 'user'の出席情報を取る
         if ($role === "user") {
-            $user_info = $this->Attendance->getAllTimeAttendances($user_id);
+            $user_info = $this->Attendance->getAllTimeAttendances($user_id, 8);
             $this->set(compact("user_info"));
         }
 

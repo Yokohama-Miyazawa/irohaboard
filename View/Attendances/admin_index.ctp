@@ -132,7 +132,14 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 				<td nowrap class="ib-col-center number-column"><?php echo h($member['username']); ?>&nbsp;</td>
 				<td nowrap class="student-number-column">
 					<span data-toggle="tooltip" title='<img src="<?php echo $img_src; ?>" height="150" alt="<?php echo $member['name']; ?>"/>'>
-						<?php echo h($member['name']); ?>(<?php echo h($member['grade']); ?>)&nbsp;
+						<?php
+							echo $this->Html->link(h($member['name']).'('.h($member['grade']).')',
+								[
+									"controller" => "attendances",
+									"action" => "admin_student_view", $user_id,
+								]
+							);
+						?>
 					</span>
 				</td>
 				<?php
@@ -233,7 +240,14 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 				<td nowrap class="ib-col-center number-column"><?php echo h($member['username']); ?>&nbsp;</td>
 				<td nowrap class="student-number-column">
 					<span data-toggle="tooltip" title='<img src="<?php echo $img_src; ?>" height="150" alt="<?php echo $member['name']; ?>"/>'>
-						<?php echo h($member['name']); ?>(<?php echo h($member['grade']); ?>)&nbsp;
+						<?php
+							echo $this->Html->link(h($member['name']).'('.h($member['grade']).')',
+								[
+									"controller" => "attendances",
+									"action" => "admin_student_view", $user_id,
+								]
+							);
+						?>
 					</span>
 				</td>
 				<?php
