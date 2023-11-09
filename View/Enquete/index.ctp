@@ -12,7 +12,7 @@
   ?>
 
   <div class="form-input-block enquete-input-group required-input">
-    <label for="group-select">個別指導の担当講師：</label>
+    <label for="group-select">個別指導の担当講師/TA：</label>
     <div id="group-select" >
       <?php foreach($group_leaders as $leader):
         $pic_path = $leader["pic_path"] == "" ? "student_img/noPic.png" : h($leader["pic_path"]);

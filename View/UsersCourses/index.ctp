@@ -28,7 +28,7 @@
 				<input id="TAB-ATTEND" type="radio" name="TAB" class="tab-switch" checked="checked" />
 					<label class="tab-label" id="attend-label" for="TAB-ATTEND">出席</label>
 				<div class="tab-content attend">
-					<p>今日の担当講師を選び、今日の授業のゴールを書いてください。これを送信すると出席扱いになります。</p>
+					<p>今日の担当講師/TAを選び、今日の授業のゴールを書いてください。これを送信すると出席扱いになります。</p>
 					<?php
 					echo $this->Form->create(false,['type' => 'post','url'=> ['controller' => 'enquete','action' => 'index'],'novalidate' => true]);
 					echo $this->Form->hidden('group_id', array('value' => $group_id));
@@ -38,7 +38,7 @@
 
 					echo "<div class='form-input-block enquete-input-group required-input'>";
 					echo $this->Form->input('group_id',array(
-						'label' => __('個別指導の担当講師：'),
+						'label' => __('個別指導の担当講師/TA：'),
 						'div' => false,
 						'class' => '',
 						'required'=> 'required',

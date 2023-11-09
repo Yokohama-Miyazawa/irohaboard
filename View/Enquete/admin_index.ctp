@@ -161,7 +161,7 @@ function dis_item(obj, className){
 				<th nowrap　class="ib-col-center"><?php echo $this->Paginator->sort('Enquete.created','提出日時')?>
 				<th nowrap><?php echo $this->Paginator->sort('User.username', '受講生番号'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('User.name', '氏名'); ?></th>
-				<th nowrap><?php echo $this->Paginator->sort('Enquete.group_id', '担当講師'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('Enquete.group_id', '担当'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('User.period', '時限'); ?></th>
 				<th nowrap><?php echo $this->Paginator->sort('Enquete.today_impressions', '今日の感想'); ?></th>
 				<th nowrap class="beforeGoalCleared" style="display : none;"><?php echo $this->Paginator->sort('Enquete.before_goal_cleared', '前回T/F'); ?></th>

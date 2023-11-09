@@ -35,7 +35,7 @@
   <div class="form-input-block enquete-input-group required-input">
   <?php
     echo $this->Form->input('group_id',array(
-      'label' => __('担当講師：'),
+      'label' => __('担当講師/TA：'),
     	'div' => false,
     	'class' => '',
       'required'=> 'required',
