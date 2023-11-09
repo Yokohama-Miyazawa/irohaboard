@@ -109,3 +109,25 @@ input[type="radio"] + label {
 .student-number-column {
   width: 9em;
 }
+
+.student-view {
+  display: table;
+  min-height: 150px;
+}
+
+.student-name,
+.student-photo {
+  display: table-cell;
+}
+
+.student-name {
+  width: 10em;
+  box-sizing: border-box;
+  vertical-align: top;
+  font-size: 20px;
+}
+
+.student-photo {
+  width: 150px;
+  vertical-align: top;
+}

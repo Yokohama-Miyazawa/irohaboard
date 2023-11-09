@@ -171,16 +171,26 @@ class Attendance extends AppModel
         }
     }
 
-    public function getAllTimeAttendances($user_id)
+    /**
+     * @param int $user_id ユーザID
+     * @param int $limit データの個数
+     * 指定した受講生の出欠情報を、最新のものから$limit個取得
+     * $limitを指定しない場合は全出欠情報を取得
+     */
+    public function getAllTimeAttendances($user_id, $limit=null)
     {
         $data = $this->find("all", [
+            "fields" => [
+                "Attendance.id", "Attendance.status", "Attendance.reason",
+                "Date.id", "Date.date",
+            ],
             "conditions" => [
                 "Attendance.user_id" => $user_id,
             ],
             "order" => [
                 "Date.date" => "DESC",
             ],
-            "limit" => 8,
+            "limit" => $limit,
             "recursive" => 0,
         ]);
         return $data;

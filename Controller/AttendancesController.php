@@ -241,6 +241,20 @@ class AttendancesController extends AppController
         );
     }
 
+    /**
+     * @param int $user_id ユーザID
+     * 受講生個人の全出欠記録を表示
+     */
+    public function admin_student_view($user_id)
+    {
+        $this->loadModel("User");
+        $user_info = $this->User->findUserInfo($user_id);
+        $this->set("user_info", $user_info);
+
+        $attendance_data = $this->Attendance->getAllTimeAttendances($user_id);
+        $this->set("attendance_data", $attendance_data);
+    }
+
     public function admin_edit($user_id, $attendance_id)
     {
         $this->loadModel("User");
