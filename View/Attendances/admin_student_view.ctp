@@ -35,13 +35,13 @@ function getAttendanceStringAndStyle($attendance_datum)
          case 3:
             return [
                "string" => "遅刻予定",
-               "text-class" => "green",
+               "text-class" => "text-success",
                "font-weight" => "normal",
             ];
          case 4:
             return [
                "string" => "早退予定",
-               "text-class" => "green",
+               "text-class" => "text-success",
                "font-weight" => "normal",
             ];
          default:
