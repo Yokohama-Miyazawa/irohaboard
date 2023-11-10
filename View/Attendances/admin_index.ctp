@@ -24,40 +24,40 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 {
 	switch($attendance_datum['status']){
 		case 0:  // 欠席
-			$color = 'red';
+			$text_class = 'text-danger';
 			$mark  = '×';
 			break;
 		case 1:  // 出席済
 			if($attendance_datum['late_time'] != 0){
 				$late_time = $attendance_datum['late_time'];
-				$color = 'green';
+				$text_class = 'text-success';
 				$mark  = '△'."($late_time)";
 			}else{
-				$color = 'blue';
+				$text_class = 'text-primary';
 				$mark  = '○';
 			}
 			break;
 		case 2:  // 未定
 			if($is_future){
-				$color = 'blue';
+				$text_class = 'text-primary';
 				$mark  = '-';				
 			}else{
-				$color = 'orange';
+				$text_class = 'text-warning';
 				$mark  = '?';
 			}
 			break;
 		case 3:  // 遅刻予定
-			$color = 'green';
+			$text_class = 'text-success';
 			$mark  = '△';
 			break;
 		case 4:  // 早退予定
-			$color = 'blue';
+			$text_class = 'text-primary';
 			$mark  = '○(!)';
 			break;
 	}
 	return [
 		"mark" => $mark,
-		"color" => $color,
+		"text-class" => $text_class,
 	];
 }
 ?>
@@ -123,7 +123,7 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 								'action' => 'admin_edit', $user_id, $attendance_id
 							),
 							array(
-								'style' => 'color:'.$attendance_icon['color'].';'
+								'class' => $attendance_icon['text-class']
 						));
 					?>
 				</span></td>
@@ -155,7 +155,7 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 								'action' => 'admin_edit', $user_id, $attendance_id
 							),
 							array(
-								'style' => 'color:'.$attendance_icon['color'].';'
+								'class' => $attendance_icon['text-class']
 						));
 					?>
 				</span></td>
@@ -231,7 +231,7 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 								'action' => 'admin_edit', $user_id, $attendance_id
 							),
 							array(
-								'style' => 'color:'.$attendance_icon['color'].';'
+								'class' => $attendance_icon['text-class']
 						));
 					?>
 				</span></td>
@@ -263,7 +263,7 @@ function getAttendanceIcon($attendance_datum, $is_future=false)
 								'action' => 'admin_edit', $user_id, $attendance_id
 							),
 							array(
-								'style' => 'color:'.$attendance_icon['color'].';'
+								'class' => $attendance_icon['text-class']
 						));
 					?>
 				</span></td>
