@@ -41,7 +41,6 @@
     <div class = "white-width">
     </div>
     <div class = "student-search-submit-btn">
-    <!--<input type = "submit" class = "" value = "検索">-->
     <?php echo $this->Form->submit(__('検索'), array('class' => 'btn btn-primary', 'div' => false)); ?>
     </div>
     <?php
