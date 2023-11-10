@@ -33,9 +33,11 @@ class SoapsController extends AppController
                 $this->Flash->error(__("CSRFエラーです。"));
                 $this->redirect(["action" => "index"]);
                 break;
-            default:
+            case 'secure':
                 $this->Flash->error(__("保存に失敗しました。フォーム送信後のブラウザバックはおやめください。"));
                 $this->redirect(["action" => "index"]);
+                break;
+            default:
                 break;
         }
     }
