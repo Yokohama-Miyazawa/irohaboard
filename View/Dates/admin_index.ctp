@@ -30,16 +30,24 @@
         </td>
         <td nowrap><?php echo h($is_online); ?></td>
         <td nowrap class="ib-col-action">
-          <button type="button" class="btn btn-success" onclick="location.href='<?php echo Router::url(array('action' => 'edit', $date['Date']['id'])) ?>'">編集</button>
           <?php echo $this->Form->postLink(__('削除'),
             array('action' => 'delete', $date['Date']['id']),
             array('class'=>'btn btn-danger'),
             __('[%s] を削除してもよろしいですか?', $date['Date']['date'])
           ); ?>
+          <button type="button" class="btn btn-success" onclick="location.href='<?php echo Router::url(array('action' => 'edit', $date['Date']['id'])) ?>'">編集</button>
         </td>
       </tr>
       <?php endforeach; ?>
     </tbody>
   </table>
-  <?php echo $this->element('paging'); ?>
+  <?php //echo $this->element('paging'); ?>
+	<div class="imitated-paging" style="margin-left: 1em;">
+		<ul class="pagination">
+			<?php
+				$this->Paginator->options(array('class' => 'page-link'));
+				echo $this->Paginator->numbers(array('currentTag' => 'a class="page-link"'));
+			?>
+		</ul>
+	</div>
 </div>
