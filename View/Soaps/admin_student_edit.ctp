@@ -153,6 +153,6 @@ $(function(){
 		</div>
   </div>
   <div class = "under_element"></div>
-  <input type = "submit" class = "btn btn-info btn-add pull-right" value = "登録">
+  <input type = "submit" class = "btn btn-primary btn-add pull-right" value = "登録">
   <?php echo $this->Form->end(); ?>
 </div>

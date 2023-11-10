@@ -134,7 +134,7 @@ $(function(){
 		</div>-->
   </div>
   <!--<div class = "under_element"></div>-->
-  <input type = "submit" class = "btn btn-info btn-add pull-right" value = "更新">
+  <input type = "submit" class = "btn btn-primary btn-add pull-right" value = "更新">
   <?php echo $this->Form->end(); ?>
   <br>
   <?php
