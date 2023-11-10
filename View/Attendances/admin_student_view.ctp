@@ -8,19 +8,19 @@ function getAttendanceStringAndStyle($attendance_datum)
          case 0:
             return [
                "string" => "欠席",
-               "color" => "red",
+               "text-class" => "text-danger",
                "font-weight"  => "normal",
             ];
          case 2:
             return [
                "string" => "欠席(連絡なし)",
-               "color" => "red",
+               "text-class" => "text-danger",
                "font-weight" => "bold",
             ];
          default:
             return [
                "string" => "出席",
-               "color" => "blue",
+               "text-class" => "text-primary",
                "font-weight" => "normal",
             ];
       }
@@ -29,25 +29,25 @@ function getAttendanceStringAndStyle($attendance_datum)
          case 0:
             return [
                "string" => "欠席予定",
-               "color" => "red",
+               "text-class" => "text-danger",
                "font-weight" => "normal",
             ];
          case 3:
             return [
                "string" => "遅刻予定",
-               "color" => "green",
+               "text-class" => "green",
                "font-weight" => "normal",
             ];
          case 4:
             return [
                "string" => "早退予定",
-               "color" => "green",
+               "text-class" => "green",
                "font-weight" => "normal",
             ];
          default:
             return [
                "string" => "出席予定",
-               "color" => "blue",
+               "text-class" => "text-primary",
                "font-weight" => "normal",
             ];
       }
@@ -93,7 +93,7 @@ function getAttendanceStringAndStyle($attendance_datum)
             <?php $attendance_info = getAttendanceStringAndStyle($datum);?>
 			   <tr>
                <td nowrap><?php echo h($datum["Date"]["date"]);?></td>
-               <td nowrap style="color:<?php echo h($attendance_info["color"]); ?>; font-weight:<?php echo h($attendance_info["font-weight"]); ?>">
+               <td nowrap class="<?php echo h($attendance_info["text-class"]); ?>" style="font-weight:<?php echo h($attendance_info["font-weight"]); ?>">
                   <?php echo h($attendance_info["string"]);?>
                </td>
                <td nowrap><?php echo h($datum["Attendance"]["reason"]);?></td>
