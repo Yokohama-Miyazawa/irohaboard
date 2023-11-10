@@ -1,6 +1,6 @@
 <?php
   echo $this->element('admin_menu');
-  echo $this->Html->css('recentstate');
+  echo $this->Html->css('recentstate.css?20231110');
   echo $this->Html->css('bootstrap.min');
 ?>
 <div class = "admin-recentstate-findByStudent">
@@ -41,7 +41,7 @@
     <div class = "white-width">
     </div>
     <div class = "student-search-submit-btn">
-    <input type = "submit" class = "" value = "検索">
+    <?php echo $this->Form->submit(__('検索'), array('class' => 'btn btn-primary', 'div' => false)); ?>
     </div>
     <?php
       echo $this->Form->end();
