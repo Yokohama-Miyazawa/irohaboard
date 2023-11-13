@@ -17,6 +17,10 @@
 			<?php
 				echo $this->Form->input('id');
 				echo $this->Form->input('title',	array('label' => __('グループ名')));
+				echo $this->Form->input('leader_id', [
+					'label' => __('リーダー講師'),
+					'options' => $admins,
+				]);
 				///echo $this->Form->input('Course',	array('label' => __('受講コース'),		'size' => 20));
 				echo $this->Form->input('status',	array(
 					'type' => 'radio',

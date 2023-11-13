@@ -29,10 +29,18 @@ class GroupsController extends AppController
             "GroupCourse.course_title"; // 外部結合テーブルのフィールドによるソート用
 
         $this->Paginator->settings = [
-            "fields" => ["*", "GroupCourse.course_title"],
+            "fields" => ["Group.id", "Group.title", "Group.comment", "Group.status", "Group.leader_id", "Group.created", "Group.modified",
+                         "GroupCourse.course_title", "User.name"
+                        ],
             "limit" => 20,
             "order" => ["status desc", "created desc"],
             "joins" => [
+                [
+                    "table" => "ib_users",
+                    "alias" => "User",
+                    "type" => "LEFT",
+                    "conditions" => "User.id = Group.leader_id",
+                ],
                 [
                     "type" => "LEFT OUTER",
                     "alias" => "GroupCourse",
@@ -61,6 +69,8 @@ class GroupsController extends AppController
      */
     public function admin_edit($group_id = null)
     {
+        $this->loadModel("User");
+
         if ($this->action == "edit" && !$this->Group->exists($group_id)) {
             throw new NotFoundException(__("Invalid group"));
         }
@@ -83,6 +93,9 @@ class GroupsController extends AppController
             ];
             $this->request->data = $this->Group->find("first", $options);
         }
+
+        $admins = $this->User->getAdminList();
+        $this->set(compact("admins"));
 
         $courses = $this->Group->Course->find("list");
         $this->set(compact("courses"));
