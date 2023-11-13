@@ -220,6 +220,18 @@ class User extends AppModel
         return $data;
     }
 
+    /**
+     * role == 'admin' のユーザリストを取得
+     */
+    public function getAdminList()
+    {
+        $data = $this->find("list", [
+            "fields" => ["id", "name"],
+            "conditions" => ["role" => "admin"],
+        ]);
+        return $data;
+    }
+
     // ユーザ名で検索
     public function findUserList($username, $name)
     {

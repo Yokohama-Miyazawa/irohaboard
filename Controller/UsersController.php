@@ -249,7 +249,7 @@ class UsersController extends AppController
 							'table' => '(SELECT ug.user_id, group_concat(g.title order by g.id SEPARATOR \', \') as group_title FROM ib_users_groups ug INNER JOIN ib_groups g ON g.id = ug.group_id GROUP BY ug.user_id)',
 							'conditions' => 'User.id = UserGroup.user_id')
 				)
-*/
+                */
             ],
         ];
 
@@ -356,10 +356,10 @@ class UsersController extends AppController
                 }
 
                 /*
-        if($this->User->updatePicPath($user_id, $picPath) !== 1){
-          $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        */
+                if($this->User->updatePicPath($user_id, $picPath) !== 1){
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                }
+                */
                 $this->Flash->success(__("ユーザ情報が保存されました"));
 
                 unset($this->request->data["User"]["new_password"]);

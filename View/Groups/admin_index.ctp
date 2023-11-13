@@ -9,6 +9,7 @@
 	<thead>
 	<tr>
 		<th><?php echo $this->Paginator->sort('title', 'グループ名'); ?></th>
+		<th class="ib-col-center"><?php echo __('リーダー'); ?></th>
 		<th class="ib-col-center"><?php echo $this->Paginator->sort('status', '公開/非公開'); ?></th>
 		<th class="ib-col-date"><?php echo $this->Paginator->sort('created', '作成日時'); ?></th>
 		<th class="ib-col-date"><?php echo $this->Paginator->sort('modified', '更新日時'); ?></th>
@@ -19,6 +20,7 @@
 	<?php foreach ($groups as $group): ?>
 	<tr>
 		<td><?php echo h($group['Group']['title']); ?></td>
+		<td class="ib-col-center"><?php echo h($group['User']['name']); ?>&nbsp;</td>
 		<td class="ib-col-center"><?php echo h(Configure::read('group_status.'.$group['Group']['status'])); ?>&nbsp;</td>
 		<td class="ib-col-date"><?php echo h(Utils::getYMDHN($group['Group']['created'])); ?>&nbsp;</td>
 		<td class="ib-col-date"><?php echo h(Utils::getYMDHN($group['Group']['modified'])); ?>&nbsp;</td>
