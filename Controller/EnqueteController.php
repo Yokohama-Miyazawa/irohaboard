@@ -188,11 +188,29 @@ class EnqueteController extends AppController
         $this->set("to_date", $to_date);
     }
 
+    /**
+     * アンケート一覧（講師側）
+     */
     public function admin_index()
     {
         $this->loadModel("Date");
+        $this->loadModel("Group");
 
         $this->Prg->commonProcess();
+
+        $my_id = $this->Auth->user("id");
+        $my_group = $this->Group->find("first", [
+            "fields" => [
+                "id",
+                "leader_id"
+            ],
+            "conditions" => [
+                "leader_id" => $my_id,
+                "status" => 1,
+            ],
+            "recursive" => -1,
+        ]);
+        $my_group_id = empty($my_group) ? "" : $my_group["Group"]["id"];
 
         // Model の filterArgs に定義した内容にしたがって検索条件を作成
         // ただしアソシエーションテーブルには対応していないため、独自に検索条件を設定する必要がある
@@ -200,7 +218,7 @@ class EnqueteController extends AppController
 
         $group_id = isset($this->request->query["group_id"])
             ? $this->request->query["group_id"]
-            : "";
+            : $my_group_id;
         $period = isset($this->request->query["period"])
             ? $this->request->query["period"]
             : "";
