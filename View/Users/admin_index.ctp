@@ -26,7 +26,7 @@
 	<div class="ib-horizontal">
 		<?php
 			echo $this->Form->create('User');
-			echo $this->Form->input('group_id',		array(
+			echo $this->Form->input('group_id', array(
 				'label' => 'グループ : ',
 				'options'=>$groups,
 				'selected'=>$group_id,
@@ -35,8 +35,12 @@
 				'class' => 'form-control',
 				'onchange' => 'submit(this.form);'
 			));
-			echo $this->Form->input('username',		array('label' => 'ログインID : ', 'required' => false));
-			echo $this->Form->input('name',			array('label' => '氏名 or ふりがな: '  , 'required' => false));
+			echo $this->Form->input('username', array('label' => 'ログインID : ', 'required' => false));
+			echo $this->Form->input('name',	[
+				'label' => '氏名 or ふりがな: ',
+				'required' => false,
+				'value' => $name,
+			]);
 		?>
 		<input type="submit" class="btn btn-info btn-add" value="検索">
 	</div>

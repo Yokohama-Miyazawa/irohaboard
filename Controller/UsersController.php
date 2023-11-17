@@ -195,14 +195,6 @@ class UsersController extends AppController
             );
         }
 
-        // GETパラメータから検索条件を抽出
-        $group_id = isset($this->request->query["group_id"])
-            ? $this->request->query["group_id"]
-            : $this->Session->read("Iroha.group_id");
-        $name = isset($this->request->query["name"])
-            ? $this->request->query["name"]
-            : "";
-
 		// GETパラメータから検索条件を抽出
 		$group_id = (isset($this->request->query['group_id'])) ? $this->request->query['group_id'] : $this->Session->read('Iroha.group_id');
 		$name     = (isset($this->request->query['name'])) ? $this->request->query['name'] : "";
@@ -290,7 +282,8 @@ class UsersController extends AppController
                 "roles",
                 "role",
                 "user_list",
-                "group_id"
+                "group_id",
+                "name"
             )
         );
     }
