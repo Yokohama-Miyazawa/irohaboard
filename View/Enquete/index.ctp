@@ -130,8 +130,8 @@
     'style' => '',
     'value' => $enquete_inputted['Enquete']['today_impressions']
   ));
-  echo "</div>"
-;  ?>
+  echo "</div>";
+  ?>
   <input type = "submit" class = "btn btn-primary btn-add" value = "送信">
   <?php echo $this->Form->end(); ?>
   </div>
