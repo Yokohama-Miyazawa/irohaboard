@@ -165,7 +165,13 @@
 		</div>
   </div>
   <?php endforeach;?>
-  <input type = "submit" class = "btn btn-primary btn-add pull-right" value = "登録">
+  <?php
+    echo $this->Form->button("登録", [
+      'type' => 'button',
+      'onclick' => 'submit()',
+      'class' => 'btn btn-primary btn-add pull-right',
+    ]);
+  ?>
   <?php echo $this->Form->end(); ?>
   <?php endif ?>
 </div>
