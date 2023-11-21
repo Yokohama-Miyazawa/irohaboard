@@ -181,7 +181,7 @@ $(function(){
 
     <div class = "info-input">
 			<?php
-    		echo $this->Form->input('online',	array(
+    		echo $this->Form->input('face_or_online',	array(
         	'label' => array(
           	'text' => '対面/オンライン',
           	'class' => 'info-input-label'

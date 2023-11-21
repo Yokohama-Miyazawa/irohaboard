@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `ib_users` (
   `modified` datetime DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   `pic_path` varchar(200) DEFAULT NULL,
-  `online` int(1) DEFAULT NULL,
+  `face_or_online` int(1) DEFAULT NULL,
   `period` int(20) DEFAULT NULL,
   `os_type` int(20) DEFAULT NULL,
   `group_id` int(20) DEFAULT NULL,
