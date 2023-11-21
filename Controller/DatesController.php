@@ -88,7 +88,7 @@ class DatesController extends AppController
 
         $is_online = $type === "online" ? 1 : 0;
         $last_date_info = $this->Date->find("first", [
-            "order" => "id desc",
+            "order" => "date desc",
         ]);
         $last_date = $last_date_info["Date"]["date"];
 
@@ -108,7 +108,7 @@ class DatesController extends AppController
 
                 // 保存した情報を検索し，IDを取得
                 $tmp_date_info = $this->Date->find("first", [
-                    "order" => "id desc",
+                    "order" => "date desc",
                 ]);
                 $date_id = $tmp_date_info["Date"]["id"];
 
