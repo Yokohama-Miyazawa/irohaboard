@@ -113,7 +113,12 @@
 
   <div class="card" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
     <div class = "card-header">
-      <div class="text-center" style="font-size:18px;">１限 人数: <?php echo ($attended_users['1st']['Whole']['Count'] + $absent_users['1st']['Whole']['Count']);?>人, 出席: <?php echo ($attended_users['1st']['Whole']['Count']);?>人, 欠席: <?php echo ($absent_users['1st']['Whole']['Count']);?>人</div>
+      <div class="text-center" style="font-size:18px;">
+        １限 
+        人数: <?php echo ($attended_users['1st']['Whole']['Count'] + $absent_users['1st']['Whole']['Count']);?>人, 
+        出席: <?php echo ($attended_users['1st']['Whole']['Count']);?>人, 
+        欠席: <?php echo ($absent_users['1st']['Whole']['Count']);?>人
+      </div>
     </div>
 
     <div class="card-body whole">
@@ -158,12 +163,16 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="card" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
     <div class = "card-header">
-      <div class="text-center" style="font-size:18px;">2限 人数: <?php echo ($attended_users['2nd']['Whole']['Count'] + $absent_users['2nd']['Whole']['Count']);?>人, 出席: <?php echo ($attended_users['2nd']['Whole']['Count']);?>人, 欠席: <?php echo ($absent_users['2nd']['Whole']['Count']);?>人</div>
+      <div class="text-center" style="font-size:18px;">
+        2限 
+        人数: <?php echo ($attended_users['2nd']['Whole']['Count'] + $absent_users['2nd']['Whole']['Count']);?>人, 
+        出席: <?php echo ($attended_users['2nd']['Whole']['Count']);?>人, 
+        欠席: <?php echo ($absent_users['2nd']['Whole']['Count']);?>人
+      </div>
     </div>
 
     <div class="card-body whole">
