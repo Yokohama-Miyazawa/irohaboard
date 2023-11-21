@@ -191,6 +191,11 @@ $config["period"] = [
     "1" => "2限",
 ];
 
+$config["face_or_online"] = [
+    "0" => "オンライン",
+    "1" => "対面",
+];
+
 $config["os_type"] = [
     "1" => "Windows",
     "2" => "MacOS",
