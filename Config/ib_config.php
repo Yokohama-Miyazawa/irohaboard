@@ -192,8 +192,8 @@ $config["period"] = [
 ];
 
 $config["face_or_online"] = [
-    "0" => "オンライン",
-    "1" => "対面",
+    "0" => "対面",
+    "1" => "オンライン",
 ];
 
 $config["os_type"] = [
