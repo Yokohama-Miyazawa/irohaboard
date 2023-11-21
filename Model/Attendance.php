@@ -80,12 +80,20 @@ class Attendance extends AppModel
         return false;
     }
 
-    public function isExistThePeriodTheUserAttendanceInfo($user_id, $date_id, $period)
+    /**
+     * @param int $user_id ユーザID
+     * @param int $date_id 授業日のID
+     * @param int $face_or_online 対面授業かオンライン授業か
+     * @param int $period 受講時限
+     * 指定された条件の出欠データが存在しているか否か
+     */
+    public function isExistTheConditionTheUserAttendanceInfo($user_id, $date_id, $face_or_online, $period)
     {
         $data = $this->find("first", [
             "conditions" => [
                 "User.id" => $user_id,
                 "Date.id" => $date_id,
+                "Attendance.face_or_online" => $face_or_online,
                 "Attendance.period" => $period,
             ],
         ]);
@@ -115,6 +123,10 @@ class Attendance extends AppModel
         return $isInfoSet;
     }
 
+    /**
+     * @param int $date_id 授業日のID
+     * 指定された授業日について、全受講生の出欠データを作成
+     */
     public function setAttendanceInfo($date_id)
     {
         $is_exist_attendance_info = $this->isExistAttendanceInfo($date_id);
@@ -133,6 +145,7 @@ class Attendance extends AppModel
             ) {
                 $init_info = [
                     "user_id" => $user["User"]["id"],
+                    "face_or_online" => $user["User"]["face_or_online"],
                     "period" => $user["User"]["period"],
                     "date_id" => $date_id,
                     "status" => 2,
@@ -143,7 +156,13 @@ class Attendance extends AppModel
         }
     }
 
-    public function setNewUserAttendanceInfo($user_id, $period)
+    /**
+     * @param int $user_id ユーザID
+     * @param int $face_or_online 対面授業かオンライン授業か
+     * @param int $period 受講時限
+     * 受講生データが作成または更新された際に、その出欠データを作成または更新
+     */
+    public function setNewUserAttendanceInfo($user_id, $face_or_online, $period)
     {
         $this->Date = new Date();
         $date_ids = $this->Date->getDateIDsFromToday();
@@ -151,13 +170,14 @@ class Attendance extends AppModel
             if (!$this->isExistTheUserAttendanceInfo($user_id, $date_id)) {
                 $init_info = [
                     "user_id" => $user_id,
+                    "face_or_online" => $face_or_online,
                     "period" => $period,
                     "date_id" => $date_id,
                     "status" => 2,
                 ];
                 $this->create();
                 $this->save($init_info);
-            } else if (!$this->isExistThePeriodTheUserAttendanceInfo($user_id, $date_id, $period)) {
+            } else if (!$this->isExistTheConditionTheUserAttendanceInfo($user_id, $date_id, $face_or_online, $period)) {
                 $data = $this->find("first", [
                     "conditions" => [
                         "user_id" => $user_id,
@@ -165,6 +185,7 @@ class Attendance extends AppModel
                     ],
                     "recursive" => -1,
                 ]);
+                $data["Attendance"]["face_or_online"] = $face_or_online;
                 $data["Attendance"]["period"] = $period;
                 $this->save($data);
             }
