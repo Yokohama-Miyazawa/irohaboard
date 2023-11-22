@@ -353,20 +353,11 @@ class AttendancesController extends AppController
 
         $last_day = $this->Date->getLastClassDate("Y-m-d");
         $last_class_date_id = $this->Date->getLastClassId();
-
         $this->set(compact("last_day", "last_class_date_id"));
 
-        $period_1_attended = $this->Attendance->findAttendedUsersTheDateThePeriod($last_class_date_id, 0);
-        $period_1_absent = $this->Attendance->findAbsentUsersTheDateThePeriod($last_class_date_id, 0);
-
-        $this->set("period_1_submitted", $period_1_attended);
-        $this->set("period_1_unsubmitted", $period_1_absent);
-
-        $period_2_attended = $this->Attendance->findAttendedUsersTheDateThePeriod($last_class_date_id, 1);
-        $period_2_absent = $this->Attendance->findAbsentUsersTheDateThePeriod($last_class_date_id, 1);
-
-        $this->set("period_2_submitted", $period_2_attended);
-        $this->set("period_2_unsubmitted", $period_2_absent);
+        $attended_users = $this->Attendance->findAttendedUsersTheDate($last_class_date_id);
+        $absent_users   = $this->Attendance->findAbsentUsersTheDate($last_class_date_id);
+        $this->set(compact("attended_users", "absent_users"));
     }
 }
 ?>
