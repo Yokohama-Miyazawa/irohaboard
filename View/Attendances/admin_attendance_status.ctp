@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  <div class="card" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
+  <div class="card">
     <div class = "card-header">
       <div class="text-center" style="font-size:18px;">
         １限 
@@ -121,10 +121,10 @@
       </div>
     </div>
 
-    <div class="card-body whole">
-      <div class="row">
+    <div class="card-body">
+      <div class="row whole">
         <div class="col">
-          <div class="card" id="chart" style="border: none;">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
             <div class="card-body" id="chart-body">
               <div class="pie-chart" id="period2WholeChart"></div>
               <div class="labelOverlay">
@@ -135,12 +135,10 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card-body separate">
-      <div class="row">
+      <div class="row separate">
         <div class="col">
-          <div class="card" id="chart" style="border: none;">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
             <div class="card-body" id="chart-body">
               <div class="pie-chart" id="period1FaceChart"></div>
               <div class="labelOverlay">
@@ -151,7 +149,7 @@
           </div>
         </div>
         <div class="col">
-          <div class="card" id="chart" style="border: none;">
+          <div class="card" id="chart" style="border: none;"onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
             <div class="card-body" id="chart-body">
               <div class="pie-chart" id="period1OnlineChart"></div>
               <div class="labelOverlay">
@@ -165,7 +163,7 @@
     </div>
   </div>
 
-  <div class="card" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
+  <div class="card">
     <div class = "card-header">
       <div class="text-center" style="font-size:18px;">
         2限 
@@ -175,10 +173,10 @@
       </div>
     </div>
 
-    <div class="card-body whole">
-      <div class="row">
+    <div class="card-body">
+      <div class="row whole">
         <div class="col">
-          <div class="card" id="chart" style="border: none;">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
             <div class="card-body" id="chart-body">
               <div class="pie-chart" id="period1WholeChart"></div>
               <div class="labelOverlay">
@@ -189,12 +187,10 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card-body separate">
-      <div class="row">
+      <div class="row separate">
         <div class="col">
-          <div class="card" id="chart" style="border: none;">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
             <div class="card-body" id="chart-body">
               <div class="pie-chart" id="period2FaceChart"></div>
               <div class="labelOverlay">
@@ -205,7 +201,7 @@
           </div>
         </div>
         <div class="col">
-          <div class="card" id="chart" style="border: none;">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
             <div class="card-body" id="chart-body">
               <div class="pie-chart" id="period2OnlineChart"></div>
               <div class="labelOverlay">
