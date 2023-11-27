@@ -338,11 +338,13 @@ class UsersController extends AppController
 
             if ($this->User->save($this->request->data)) {
                 $user_id = $this->User->id;
+                $face_or_online = $this->request->data["User"]["face_or_online"];
                 $period = $this->request->data["User"]["period"];
                 if ($this->request->data["User"]["role"] === "user") {
                     $this->loadModel("Attendance");
                     $this->Attendance->setNewUserAttendanceInfo(
                         $user_id,
+                        $face_or_online,
                         $period
                     );
                     $this->UsersCourse->setInitialTakenCourses($user_id);

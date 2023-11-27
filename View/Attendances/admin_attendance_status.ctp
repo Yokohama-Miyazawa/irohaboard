@@ -5,22 +5,53 @@
 <script type="text/javascript">
   google.charts.load("current", {packages:["corechart"]});
   google.charts.setOnLoadCallback(() => {
+    // 1st
     drawChart(
-      <?php echo $period_1_submitted['Count'];?>,
-      <?php echo $period_1_unsubmitted['Count'];?>,
-      "<?php echo $period_1_submitted['Member'];?>",
-      "<?php echo $period_1_unsubmitted['Member'];?>",
-      "period1Chart"
-    )
-  });
-  google.charts.setOnLoadCallback(() => {
+      <?php echo $attended_users['1st']['Whole']['Count'];?>,
+      <?php echo $absent_users['1st']['Whole']['Count'];?>,
+      "<?php echo $attended_users['1st']['Whole']['Member'];?>",
+      "<?php echo $absent_users['1st']['Whole']['Member'];?>",
+      "period1WholeChart"
+    );
     drawChart(
-      <?php echo $period_2_submitted['Count'];?>,
-      <?php echo $period_2_unsubmitted['Count'];?>,
-      "<?php echo $period_2_submitted['Member'];?>",
-      "<?php echo $period_2_unsubmitted['Member'];?>",
-      "period2Chart"
-    )
+      <?php echo $attended_users['1st']['Face']['Count'];?>,
+      <?php echo $absent_users['1st']['Face']['Count'];?>,
+      "<?php echo $attended_users['1st']['Face']['Member'];?>",
+      "<?php echo $absent_users['1st']['Face']['Member'];?>",
+      "period1FaceChart"
+    );
+    drawChart(
+      <?php echo $attended_users['1st']['Online']['Count'];?>,
+      <?php echo $absent_users['1st']['Online']['Count'];?>,
+      "<?php echo $attended_users['1st']['Online']['Member'];?>",
+      "<?php echo $absent_users['1st']['Online']['Member'];?>",
+      "period1OnlineChart"
+    );
+
+    // 2nd
+    drawChart(
+      <?php echo $attended_users['2nd']['Whole']['Count'];?>,
+      <?php echo $absent_users['2nd']['Whole']['Count'];?>,
+      "<?php echo $attended_users['2nd']['Whole']['Member'];?>",
+      "<?php echo $absent_users['2nd']['Whole']['Member'];?>",
+      "period2WholeChart"
+    );
+    drawChart(
+      <?php echo $attended_users['2nd']['Face']['Count'];?>,
+      <?php echo $absent_users['2nd']['Face']['Count'];?>,
+      "<?php echo $attended_users['2nd']['Face']['Member'];?>",
+      "<?php echo $absent_users['2nd']['Face']['Member'];?>",
+      "period2FaceChart"
+    );
+    drawChart(
+      <?php echo $attended_users['2nd']['Online']['Count'];?>,
+      <?php echo $absent_users['2nd']['Online']['Count'];?>,
+      "<?php echo $attended_users['2nd']['Online']['Member'];?>",
+      "<?php echo $absent_users['2nd']['Online']['Member'];?>",
+      "period2OnlineChart"
+    );
+
+    changeDisplayList({'id':'whole'});
   });
 
   function drawChart(attended_count, absent_count, atended_member, absent_member, element) {
@@ -37,14 +68,26 @@
       ['欠席数',absent_count, absent_students],
     ])
     const options = {
-      pieHole: 0.6,
+      pieHole: 0.55,
       fontSize: 18,
       legend: { position: 'top', alignment: 'center' },
-      'chartArea': {'width': '100%', 'height': '80%'},
+      'chartArea': {'width': '100%', 'height': '75%'},
       tooltip: { isHtml: true }
     }
     const chart = new google.visualization.PieChart(document.getElementById(element));
     chart.draw(data, options);
+  }
+
+  function changeDisplayList(obj){
+    let wholeCharts = document.getElementsByClassName('whole');
+    let separateCharts = document.getElementsByClassName('separate');
+    if(obj['id'] == 'whole'){
+      for(let i=0; i < wholeCharts.length; i++){ wholeCharts[i].hidden = false; }
+      for(let i=0; i < separateCharts.length; i++){ separateCharts[i].hidden = true; }
+	  }else if(obj['id'] == 'separate'){
+      for(let i=0; i < wholeCharts.length; i++){ wholeCharts[i].hidden = true; }
+      for(let i=0; i < separateCharts.length; i++){ separateCharts[i].hidden = false; }
+    }
   }
 </script>
 
@@ -59,36 +102,117 @@
       <h5><?php echo __('授業日:').$last_day;?></h5>
     </div>
   </div>
-  <div class="row">
+  <div class="row text-center">
     <div class="col">
-      <p class="text-center" style="font-size:18px;">１限 人数: <?php echo ($period_1_submitted['Count'] + $period_1_unsubmitted['Count']);?>人, 出席: <?php echo ($period_1_submitted['Count']);?>人, 欠席: <?php echo ($period_1_unsubmitted['Count']);?>人</p>
-    </div>
-    <div class="col">
-      <p class="text-center" style="font-size:18px;">２限 人数: <?php echo ($period_2_submitted['Count'] + $period_2_unsubmitted['Count']);?>人, 出席: <?php echo ($period_2_submitted['Count']);?>人, 欠席: <?php echo ($period_2_unsubmitted['Count']);?>人</p>
+      <input type="radio" name="list-radio" id="whole" value="user_list" onClick="changeDisplayList(this)" checked>
+      <label for="whole">全体</label>
+      <input type="radio" name="list-radio" id="separate" value="admin_list" onClick="changeDisplayList(this)">
+      <label for="separate">対面/オンライン別</label>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <div class="card" id="chart" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
-        <div class="card-body" id="chart-body">
-          <div class="pie-chart" id="period1Chart"></div>
-          <div class="labelOverlay">
-            <p class="total-caption">一限受講生</p>
-            <p class="total-value"><?php echo ($period_1_submitted['Count'] + $period_1_unsubmitted['Count']);?>人</p>
+
+  <div class="card">
+    <div class = "card-header">
+      <div class="text-center" style="font-size:18px;">
+        １限 
+        人数: <?php echo ($attended_users['1st']['Whole']['Count'] + $absent_users['1st']['Whole']['Count']);?>人, 
+        出席: <?php echo ($attended_users['1st']['Whole']['Count']);?>人, 
+        欠席: <?php echo ($absent_users['1st']['Whole']['Count']);?>人
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row whole">
+        <div class="col">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
+            <div class="card-body" id="chart-body">
+              <div class="pie-chart" id="period2WholeChart"></div>
+              <div class="labelOverlay">
+                <p class="total-caption">1限全体</p>
+                <p class="total-value"><?php echo ($attended_users['1st']['Whole']['Count'] + $absent_users['1st']['Whole']['Count']);?>人</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row separate">
+        <div class="col">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
+            <div class="card-body" id="chart-body">
+              <div class="pie-chart" id="period1FaceChart"></div>
+              <div class="labelOverlay">
+                <p class="total-caption">対面</p>
+                <p class="total-value"><?php echo ($attended_users['1st']['Face']['Count'] + $absent_users['1st']['Face']['Count']);?>人</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" id="chart" style="border: none;"onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
+            <div class="card-body" id="chart-body">
+              <div class="pie-chart" id="period1OnlineChart"></div>
+              <div class="labelOverlay">
+                <p class="total-caption">オンライン</p>
+                <p class="total-value"><?php echo ($attended_users['1st']['Online']['Count'] + $absent_users['1st']['Online']['Count']);?>人</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card" id="chart" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
-        <div class="card-body" id="chart-body">
-          <div class="pie-chart" id="period2Chart"></div>
-          <div class="labelOverlay">
-            <p class="total-caption">二限受講生</p>
-            <p class="total-value"><?php echo ($period_2_submitted['Count'] + $period_2_unsubmitted['Count']);?>人</p>
+  </div>
+
+  <div class="card">
+    <div class = "card-header">
+      <div class="text-center" style="font-size:18px;">
+        2限 
+        人数: <?php echo ($attended_users['2nd']['Whole']['Count'] + $absent_users['2nd']['Whole']['Count']);?>人, 
+        出席: <?php echo ($attended_users['2nd']['Whole']['Count']);?>人, 
+        欠席: <?php echo ($absent_users['2nd']['Whole']['Count']);?>人
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row whole">
+        <div class="col">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
+            <div class="card-body" id="chart-body">
+              <div class="pie-chart" id="period1WholeChart"></div>
+              <div class="labelOverlay">
+                <p class="total-caption">2限全体</p>
+                <p class="total-value"><?php echo ($attended_users['2nd']['Whole']['Count'] + $absent_users['2nd']['Whole']['Count']);?>人</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row separate">
+        <div class="col">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
+            <div class="card-body" id="chart-body">
+              <div class="pie-chart" id="period2FaceChart"></div>
+              <div class="labelOverlay">
+                <p class="total-caption">対面</p>
+                <p class="total-value"><?php echo ($attended_users['2nd']['Face']['Count'] + $absent_users['2nd']['Face']['Count']);?>人</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
+            <div class="card-body" id="chart-body">
+              <div class="pie-chart" id="period2OnlineChart"></div>
+              <div class="labelOverlay">
+                <p class="total-caption">オンライン</p>
+                <p class="total-value"><?php echo ($attended_users['2nd']['Online']['Count'] + $absent_users['2nd']['Online']['Count']);?>人</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>

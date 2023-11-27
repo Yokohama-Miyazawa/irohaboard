@@ -80,12 +80,20 @@ class Attendance extends AppModel
         return false;
     }
 
-    public function isExistThePeriodTheUserAttendanceInfo($user_id, $date_id, $period)
+    /**
+     * @param int $user_id ユーザID
+     * @param int $date_id 授業日のID
+     * @param int $face_or_online 対面授業かオンライン授業か
+     * @param int $period 受講時限
+     * 指定された条件の出欠データが存在しているか否か
+     */
+    public function isExistTheConditionTheUserAttendanceInfo($user_id, $date_id, $face_or_online, $period)
     {
         $data = $this->find("first", [
             "conditions" => [
                 "User.id" => $user_id,
                 "Date.id" => $date_id,
+                "Attendance.face_or_online" => $face_or_online,
                 "Attendance.period" => $period,
             ],
         ]);
@@ -115,6 +123,10 @@ class Attendance extends AppModel
         return $isInfoSet;
     }
 
+    /**
+     * @param int $date_id 授業日のID
+     * 指定された授業日について、全受講生の出欠データを作成
+     */
     public function setAttendanceInfo($date_id)
     {
         $is_exist_attendance_info = $this->isExistAttendanceInfo($date_id);
@@ -133,6 +145,7 @@ class Attendance extends AppModel
             ) {
                 $init_info = [
                     "user_id" => $user["User"]["id"],
+                    "face_or_online" => $user["User"]["face_or_online"],
                     "period" => $user["User"]["period"],
                     "date_id" => $date_id,
                     "status" => 2,
@@ -143,7 +156,13 @@ class Attendance extends AppModel
         }
     }
 
-    public function setNewUserAttendanceInfo($user_id, $period)
+    /**
+     * @param int $user_id ユーザID
+     * @param int $face_or_online 対面授業かオンライン授業か
+     * @param int $period 受講時限
+     * 受講生データが作成または更新された際に、その出欠データを作成または更新
+     */
+    public function setNewUserAttendanceInfo($user_id, $face_or_online, $period)
     {
         $this->Date = new Date();
         $date_ids = $this->Date->getDateIDsFromToday();
@@ -151,13 +170,14 @@ class Attendance extends AppModel
             if (!$this->isExistTheUserAttendanceInfo($user_id, $date_id)) {
                 $init_info = [
                     "user_id" => $user_id,
+                    "face_or_online" => $face_or_online,
                     "period" => $period,
                     "date_id" => $date_id,
                     "status" => 2,
                 ];
                 $this->create();
                 $this->save($init_info);
-            } else if (!$this->isExistThePeriodTheUserAttendanceInfo($user_id, $date_id, $period)) {
+            } else if (!$this->isExistTheConditionTheUserAttendanceInfo($user_id, $date_id, $face_or_online, $period)) {
                 $data = $this->find("first", [
                     "conditions" => [
                         "user_id" => $user_id,
@@ -165,6 +185,7 @@ class Attendance extends AppModel
                     ],
                     "recursive" => -1,
                 ]);
+                $data["Attendance"]["face_or_online"] = $face_or_online;
                 $data["Attendance"]["period"] = $period;
                 $this->save($data);
             }
@@ -372,9 +393,12 @@ class Attendance extends AppModel
     }
 
     /**
-     * 授業日と時限を指定し、出席者の氏名一覧と人数を返す
+     * @param int $date_id 授業日のID
+     * @param int $face_or_online 対面授業かオンライン授業か
+     * @param int $period 受講時限
+     * 授業日と対面/オンラインおよび時限を指定し、出席者の氏名一覧と人数を返す
      */
-    public function findAttendedUsersTheDateThePeriod($date_id, $period)
+    public function findAttendedUsersTheDateTheConditions($date_id, $face_or_online, $period)
     {
         // 指定した授業日の指定した時限に出席した人のリスト
         $attendance_user_list = $this->find("all", [
@@ -382,6 +406,7 @@ class Attendance extends AppModel
             "conditions" => [
                 "User.role" => "user",
                 "Attendance.date_id" => $date_id,
+                "Attendance.face_or_online" => $face_or_online,
                 "Attendance.period" => $period,
                 "Attendance.status" => 1,
             ],
@@ -389,7 +414,7 @@ class Attendance extends AppModel
         ]);
 
         // Memberは氏名を改行タグで連結した文字列
-        // Countは出席者数
+        // Countは人数
         $attended_user_data = [
             "Member" => implode(array_map(function ($attended) {
                 return $attended["User"]["name"] . "<br>";
@@ -401,9 +426,46 @@ class Attendance extends AppModel
     }
 
     /**
-     * 授業日と時限を指定し、出席者以外の氏名一覧と人数を返す
+     * @param int $date_id 授業日のID
+     * 授業日を指定し、出席者の氏名一覧と人数を返す
      */
-    public function findAbsentUsersTheDateThePeriod($date_id, $period)
+    public function findAttendedUsersTheDate($date_id)
+    {
+        $face_period_1_attended   = $this->findAttendedUsersTheDateTheConditions($date_id, 0, 0);
+        $online_period_1_attended = $this->findAttendedUsersTheDateTheConditions($date_id, 1, 0);
+        $whole_period_1_attended = [
+            "Member" => $face_period_1_attended["Member"] . "<br>" . $online_period_1_attended["Member"],
+            "Count" =>  $face_period_1_attended["Count"] + $online_period_1_attended["Count"],
+        ];
+
+        $face_period_2_attended   = $this->findAttendedUsersTheDateTheConditions($date_id, 0, 1);
+        $online_period_2_attended = $this->findAttendedUsersTheDateTheConditions($date_id, 1, 1);
+        $whole_period_2_attended = [
+            "Member" => $face_period_2_attended["Member"] . "<br>" . $online_period_2_attended["Member"],
+            "Count" =>  $face_period_2_attended["Count"] + $online_period_2_attended["Count"],
+        ];
+
+        return [
+            "1st" => [
+                "Whole"  => $whole_period_1_attended,
+                "Face"   => $face_period_1_attended,
+                "Online" => $online_period_1_attended,
+            ],
+            "2nd" => [
+                "Whole"  => $whole_period_2_attended,
+                "Face"   => $face_period_2_attended,
+                "Online" => $online_period_2_attended,
+            ],
+        ];
+    }
+
+    /**
+     * @param int $date_id 授業日のID
+     * @param int $face_or_online 対面授業かオンライン授業か
+     * @param int $period 受講時限
+     * 授業日と対面/オンラインおよび時限を指定し、出席者以外の氏名一覧と人数を返す
+     */
+    public function findAbsentUsersTheDateTheConditions($date_id, $face_or_online, $period)
     {
         // 指定した授業日の指定した時限に出席しなかった人のリスト
         $absence_user_list = $this->find("all", [
@@ -411,6 +473,7 @@ class Attendance extends AppModel
             "conditions" => [
                 "User.role" => "user",
                 "Attendance.date_id" => $date_id,
+                "Attendance.face_or_online" => $face_or_online,
                 "Attendance.period" => $period,
                 "NOT" => ["Attendance.status" => 1],
             ],
@@ -418,7 +481,7 @@ class Attendance extends AppModel
         ]);
 
         // Memberは氏名を改行タグで連結した文字列
-        // Countは出席者数
+        // Countは人数
         $absent_user_data = [
             "Member" => implode(array_map(function ($absent) {
                 return $absent["User"]["name"] . "<br>";
@@ -427,6 +490,40 @@ class Attendance extends AppModel
         ];
 
         return $absent_user_data;
+    }
+
+    /**
+     * @param int $date_id 授業日のID
+     * 授業日を指定し、出席者の氏名一覧と人数を返す
+     */
+    public function findAbsentUsersTheDate($date_id)
+    {
+        $face_period_1_absent   = $this->findAbsentUsersTheDateTheConditions($date_id, 0, 0);
+        $online_period_1_absent = $this->findAbsentUsersTheDateTheConditions($date_id, 1, 0);
+        $whole_period_1_absent = [
+            "Member" => $face_period_1_absent["Member"] . "<br>" . $online_period_1_absent["Member"],
+            "Count" =>  $face_period_1_absent["Count"] + $online_period_1_absent["Count"],
+        ];
+
+        $face_period_2_absent   = $this->findAbsentUsersTheDateTheConditions($date_id, 0, 1);
+        $online_period_2_absent = $this->findAbsentUsersTheDateTheConditions($date_id, 1, 1);
+        $whole_period_2_absent = [
+            "Member" => $face_period_2_absent["Member"] . "<br>" . $online_period_2_absent["Member"],
+            "Count" =>  $face_period_2_absent["Count"] + $online_period_2_absent["Count"],
+        ];
+
+        return [
+            "1st" => [
+                "Whole"  => $whole_period_1_absent,
+                "Face"   => $face_period_1_absent,
+                "Online" => $online_period_1_absent,
+            ],
+            "2nd" => [
+                "Whole"  => $whole_period_2_absent,
+                "Face"   => $face_period_2_absent,
+                "Online" => $online_period_2_absent,
+            ],
+        ];
     }
 
     public function calcLateTime(

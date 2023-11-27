@@ -68,6 +68,10 @@
 			<th nowrap class="col-width"><?php echo $this->Paginator->sort('name', '氏名'); ?></th>
 			<th nowrap ><?php echo $this->Paginator->sort('name_furigana', 'ふりがな'); ?></th>
 			<th nowrap><?php echo $this->Paginator->sort('role', '権限'); ?></th>
+			<?php if($role == 'user' || $role == 'graduate'){ ?>
+				<th nowrap><?php echo $this->Paginator->sort('face_or_online', '対面/オンライン'); ?></th>
+				<th nowrap><?php echo $this->Paginator->sort('period', '時限'); ?></th>
+			<?php } ?>
 			<th nowrap><?php echo __('担当'); ?></th>
 
 			<th class="ib-col-datetime"><?php echo $this->Paginator->sort('last_logined', '最終ログイン日時'); ?></th>
@@ -102,7 +106,11 @@
 			<td><?php echo h($user['User']['username']); ?>&nbsp;</td>
 			<td><?php echo h($user['User']['name']); ?></td>
 			<td><?php echo h($user['User']['name_furigana']); ?></td>
-			<td nowrap><?php echo h(Configure::read('user_role.'.$user['User']['role'])); ?>&nbsp;</td>
+			<td nowrap><?php echo h(Configure::read('user_role.'.$user['User']['role'])); ?></td>
+			<?php if($role == 'user' || $role == 'graduate'){ ?>
+				<td nowrap><?php echo h(Configure::read('face_or_online.'.$user['User']['face_or_online'])); ?></td>
+				<td nowrap><?php echo h(Configure::read('period.'.$user['User']['period'])); ?></td>
+			<?php } ?>
 			<?php $group_id = $user['User']['group_id']; ?>
 			<td>
 				<div class="reader" title="<?php echo h($groups[$group_id]); ?>">

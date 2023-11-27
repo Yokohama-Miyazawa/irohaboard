@@ -181,6 +181,22 @@ $(function(){
 
     <div class = "info-input">
 			<?php
+    		echo $this->Form->input('face_or_online',	array(
+        	'label' => array(
+          	'text' => '対面/オンライン',
+          	'class' => 'info-input-label'
+        	),
+        	'required' => false,
+        	'div' => false,
+        	'class' => false,
+        	'options' => Configure::read('face_or_online'),
+        	'empty' => ''
+        ));
+			?>
+    </div>
+
+    <div class = "info-input">
+			<?php
     		echo $this->Form->input('period',	array(
         	'label' => array(
           	'text' => '受講時間帯',
