@@ -126,7 +126,7 @@
         <div class="col">
           <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index')) ?>'">
             <div class="card-body" id="chart-body">
-              <div class="pie-chart" id="period2WholeChart"></div>
+              <div class="pie-chart" id="period1WholeChart"></div>
               <div class="labelOverlay">
                 <p class="total-caption">1限全体</p>
                 <p class="total-value"><?php echo ($attended_users['1st']['Whole']['Count'] + $absent_users['1st']['Whole']['Count']);?>人</p>
@@ -178,7 +178,7 @@
         <div class="col">
           <div class="card" id="chart" style="border: none;" onclick="location.href='<?php echo Router::url(array('controller' => 'attendances', 'action' => 'index', '#' => '2nd')) ?>'">
             <div class="card-body" id="chart-body">
-              <div class="pie-chart" id="period1WholeChart"></div>
+              <div class="pie-chart" id="period2WholeChart"></div>
               <div class="labelOverlay">
                 <p class="total-caption">2限全体</p>
                 <p class="total-value"><?php echo ($attended_users['2nd']['Whole']['Count'] + $absent_users['2nd']['Whole']['Count']);?>人</p>
